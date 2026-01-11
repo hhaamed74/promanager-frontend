@@ -1,21 +1,23 @@
 import axios from "axios";
 
-// إنشاء نسخة Axios مع رابط متغير
 const API = axios.create({
-  // إذا وجد رابط في المتغيرات البيئية يستخدمه، وإلا يستخدم localhost للتطوير المحلي
+  // تأكد أن VITE_API_URL في Vercel تنتهي بـ /api بدون علامة استفهام
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
 });
 
-// إرسال التوكن مع كل طلب بشكل تلقائي
-API.interceptors.request.use((req) => {
-  // جلب التوكن من userInfo المخزن في الـ localStorage
-  const userInfo = localStorage.getItem("userInfo");
-  const token = userInfo ? JSON.parse(userInfo).token : null;
+API.interceptors.request.use(
+  (req) => {
+    // الأفضل تجيب التوكن المباشر اللي خزنته في صفحة الـ Login
+    const token = localStorage.getItem("token");
 
-  if (token) {
-    req.headers.Authorization = `Bearer ${token}`;
+    if (token) {
+      req.headers.Authorization = `Bearer ${token}`;
+    }
+    return req;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  return req;
-});
+);
 
 export default API;
