@@ -1,12 +1,17 @@
 import axios from "axios";
 
+// إنشاء نسخة Axios مع رابط متغير
 const API = axios.create({
-  baseURL: "http://localhost:5000/api", // رابط الباك إيند بتاعك
+  // إذا وجد رابط في المتغيرات البيئية يستخدمه، وإلا يستخدم localhost للتطوير المحلي
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
 });
 
-// السطر ده وظيفته يبعت التوكن أوتوماتيك مع كل طلب لو موجود
+// إرسال التوكن مع كل طلب بشكل تلقائي
 API.interceptors.request.use((req) => {
-  const token = localStorage.getItem("token");
+  // جلب التوكن من userInfo المخزن في الـ localStorage
+  const userInfo = localStorage.getItem("userInfo");
+  const token = userInfo ? JSON.parse(userInfo).token : null;
+
   if (token) {
     req.headers.Authorization = `Bearer ${token}`;
   }
