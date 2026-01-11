@@ -1,0 +1,76 @@
+/* 1. تصفير المسافات وإعدادات الصندوق */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 2. الألوان الأساسية والمتغيرات */
+:root {
+  --main-bg: #0b0e14; /* أسود عميق */
+  --card-bg: #161b22; /* درجة أفتح للكروت */
+  --primary: #007bff; /* أزرق صريح */
+  --text-white: #ffffff;
+  --text-muted: #94a3b8; /* لون للنصوص الثانوية */
+  --transition: 0.3s ease;
+}
+
+/* 3. إعدادات الصفحة والجسم */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--main-bg);
+  color: var(--text-white);
+  direction: rtl; /* الاتجاه عربي */
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden; /* منع السكرول العرضي */
+}
+
+/* 4. تنسيقات الروابط والأزرار الافتراضية */
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition);
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  font-family: inherit;
+}
+
+/* 5. حاوية المحتوى الرئيسية */
+.container {
+  width: 90%;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+/* 6. تنسيق بسيط للسكرول بار (اختياري لشكل احترافي) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--main-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* طول الشاشة بالكامل */
+}
+
+.main-content {
+  flex: 1; /* هذا السطر يجعل المحتوى يتمدد ويدفع الفوتر للأسفل */
+}

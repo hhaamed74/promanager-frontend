@@ -1,0 +1,383 @@
+.navbar {
+  position: sticky; /* ثابتة تماماً في الأعلى */
+  top: 0;
+  width: 100%;
+  height: 80px;
+  z-index: 1000;
+  /* التأثير الزجاجي */
+  background: rgba(11, 14, 20, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+}
+
+.nav-container {
+  width: 90%;
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* اللوجو */
+.logo a {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-white);
+}
+
+.logo span {
+  color: var(--primary);
+}
+
+/* الروابط والتفاعلات */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-links a {
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  position: relative;
+  transition: var(--transition);
+}
+
+/* هوفر اللينكات - خط سفلي ذكي */
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  transition: var(--transition);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--text-white);
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+  width: 100%;
+}
+
+/* الأزرار */
+.auth-btns {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.register-btn {
+  background: var(--primary);
+  color: white !important;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+}
+
+.register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+}
+
+.logout-btn {
+  color: #ff4757;
+  font-weight: 700;
+  padding: 8px 25px; /* زودنا الـ padding شوية عشان الحركة تبان */
+  border: 1px solid #ff4757;
+  border-radius: 8px;
+  position: relative; /* ضروري عشان الطبقة اللي هتتحرك */
+  z-index: 1;
+  overflow: hidden; /* عشان الطبقة متخرجش بره حدود الزرار */
+  background: transparent;
+  transition: all 0.4s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* الطبقة اللي هتتحرك من اليمين للشمال */
+.logout-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -100%; /* تبدأ بره الزرار من ناحية اليمين */
+  width: 100%;
+  height: 100%;
+  background-color: #ff4757;
+  transition: all 0.4s ease-in-out;
+  z-index: -1; /* عشان تكون تحت النص */
+}
+
+/* حالة الهوفر */
+.logout-btn:hover {
+  color: #fff; /* لون النص يتغير للأبيض */
+}
+
+.logout-btn:hover::before {
+  right: 0; /* تتحرك وتملأ الزرار بالكامل */
+}
+
+/* حركة بسيطة عشان الزرار ميبقاش "ناشف" */
+.logout-btn:active {
+  transform: scale(0.95);
+}
+/* ريسبونسيف الموبايل */
+.menu-icon {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.menu-icon span {
+  width: 25px;
+  height: 3px;
+  background: var(--text-white);
+  transition: 0.3s;
+}
+
+@media (max-width: 768px) {
+  .menu-icon {
+    display: flex;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 80px; /* نفس ارتفاع الناف بار */
+    right: -100%;
+    width: 100%;
+    height: calc(100vh - 80px);
+
+    /* التعديل هنا: لون صريح وغامق عشان ينفصل عن البودي */
+    background: #111827; /* لون أغمق من البودي (Slate 900) */
+
+    flex-direction: column;
+    padding: 40px;
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* حركة أنعم */
+    z-index: 999;
+
+    /* إضافة ظل عشان يبان إنه فوق المحتوى */
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+
+    /* لو حابب تخليه بلوري بس بخلفية أغمق */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .nav-links.open {
+    right: 0; /* تظهر عند الضغط */
+  }
+
+  .auth-btns {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+.user-nav-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 5px 12px;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.nav-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--primary);
+}
+
+.nav-username {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.logout-btn-icon {
+  background: transparent;
+  border: none;
+  color: #ff4757;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: 0.3s;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.logout-btn-icon:hover {
+  transform: scale(1.1);
+  color: #ff6b81;
+}
+
+/* للموبايل: ترتيب العناصر */
+@media (max-width: 768px) {
+  .user-nav-section {
+    flex-direction: column;
+    width: 100%;
+  }
+  .nav-profile {
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
+  }
+}
+/* --- Notifications Styles --- */
+.notif-wrapper {
+  position: relative;
+  margin: 0 15px;
+  display: flex;
+  align-items: center;
+}
+
+.bell-icon {
+  position: relative;
+  font-size: 1.3rem;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.bell-icon:hover {
+  color: #3b82f6;
+  transform: scale(1.1);
+}
+
+.notif-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border: 2px solid #0f172a;
+}
+
+.notif-dropdown {
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  max-height: 400px;
+  background: rgba(30, 41, 59, 0.95) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  z-index: 9999;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  padding: 15px;
+}
+
+.notif-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.notif-header h4 {
+  font-size: 1rem;
+  color: #fff;
+}
+.notif-header span {
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 0.8rem;
+}
+
+.notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+.notif-item {
+  display: flex;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.notif-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.notif-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.notif-icon.user {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+.notif-icon.project {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.notif-content p {
+  font-size: 0.85rem;
+  color: #e2e8f0;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.notif-time {
+  font-size: 0.7rem;
+  color: #64748b;
+}
+
+.no-notif {
+  text-align: center;
+  padding: 20px;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}

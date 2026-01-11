@@ -1,0 +1,371 @@
+/* الحاوية الرئيسية */
+.projects-container {
+  padding: 50px 5%;
+  min-height: 100vh;
+  background-color: var(--main-bg);
+}
+
+/* الرأس (الهيدر) */
+.projects-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.projects-header h2 {
+  font-size: 2.5rem;
+  color: #fff;
+}
+
+.projects-header span {
+  color: var(--primary);
+}
+
+.projects-header p {
+  color: var(--text-muted);
+  margin-top: 10px;
+}
+
+/* تقسيم الشبكة (Grid) */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* الكارت الزجاجي */
+.project-card {
+  background: rgba(22, 27, 34, 0.4);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative; /* مهم عشان الـ status-badge */
+}
+
+.project-card:hover {
+  transform: translateY(-10px);
+  border-color: var(--primary);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* قسم الصورة */
+.card-image {
+  width: 100%;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.6s ease;
+}
+
+/* .project-card:hover .card-image img {
+  transform: scale(1.1) rotate(1deg);
+} */
+
+/* وسم الحالة فوق الصورة */
+.status-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  z-index: 2;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.status-badge.completed {
+  background: #28a745;
+}
+.status-badge.pending {
+  background: #ffc107;
+  color: #000;
+}
+
+/* جسم الكارت */
+.card-body {
+  padding: 20px 25px 25px;
+}
+
+/* البيانات العلوية (Category & Priority) */
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.category-text {
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.priority-tag {
+  font-size: 0.7rem;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-weight: 800;
+}
+
+.priority-tag.عالية {
+  background: rgba(255, 71, 87, 0.2);
+  color: #ff4757;
+  border: 1px solid rgba(255, 71, 87, 0.3);
+}
+.priority-tag.متوسطة {
+  background: rgba(255, 165, 0, 0.2);
+  color: #ffa500;
+  border: 1px solid rgba(255, 165, 0, 0.3);
+}
+.priority-tag.منخفضة {
+  background: rgba(46, 213, 115, 0.2);
+  color: #2ed573;
+  border: 1px solid rgba(46, 213, 115, 0.3);
+}
+
+.card-body h3 {
+  color: #fff;
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.card-body p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  height: 45px; /* يثبت ارتفاع الفقرة لتوحيد حجم الكروت */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* الفوتر وتاريخ الانتهاء */
+.card-footer {
+  margin-bottom: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.deadline-info {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.deadline-info i {
+  color: var(--primary);
+}
+
+/* الأزرار */
+.card-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.view-btn,
+.delete-btn {
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.3s;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-btn {
+  flex: 2;
+  background: var(--primary);
+  color: white;
+}
+
+.view-btn:hover {
+  background: var(--primary-dark);
+  filter: brightness(1.2);
+}
+
+.delete-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid rgba(255, 71, 87, 0.5);
+  color: #ff4757;
+}
+
+.delete-btn:hover {
+  background: #ff4757;
+  color: white;
+  border-color: #ff4757;
+}
+
+/* شاشة التحميل ولا يوجد مشاريع */
+.loader,
+.no-projects {
+  color: #fff;
+  text-align: center;
+  margin-top: 100px;
+  font-size: 1.2rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 40px;
+  border-radius: 20px;
+}
+
+.project-user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #eee;
+}
+
+.user-small-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+.user-name-text {
+  font-size: 0.85rem;
+  color: #777;
+  font-weight: 500;
+}
+
+.description-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 2.8rem; /* لتوحيد ارتفاع الكروت */
+}
+
+/* --- قسم البحث والفلترة --- */
+.filter-wrapper {
+  margin: 20px auto 40px;
+  padding: 25px;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+}
+
+.search-bar i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #3b82f6;
+  font-size: 1.1rem;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 12px 20px 12px 45px; /* مساحة للأيقونة */
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.search-bar input:focus {
+  border-color: #3b82f6;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+}
+
+/* --- أزرار التصنيفات (Tags) --- */
+.category-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.tag-btn {
+  padding: 8px 20px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #cbd5e1;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tag-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.tag-btn.active {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+}
+
+/* --- حالة عدم وجود نتائج --- */
+.no-projects {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.no-projects p {
+  font-size: 1.2rem;
+  color: #94a3b8;
+}
+
+/* تحسين تجاوب التصميم مع الموبايل */
+@media (max-width: 768px) {
+  .filter-wrapper {
+    padding: 15px;
+    margin: 10px;
+  }
+
+  .tag-btn {
+    padding: 6px 15px;
+    font-size: 0.8rem;
+  }
+}

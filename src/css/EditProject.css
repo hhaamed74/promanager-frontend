@@ -1,0 +1,120 @@
+.edit-container {
+  padding: 60px 5%;
+  background: var(--main-bg);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.edit-form {
+  max-width: 800px;
+  width: 100%;
+  padding: 40px;
+  background: rgba(22, 27, 34, 0.7);
+  backdrop-filter: blur(15px);
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.image-upload-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.preview-container img {
+  width: 200px;
+  height: 150px;
+  border-radius: 15px;
+  object-fit: cover;
+  border: 2px dashed var(--primary);
+  margin-bottom: 15px;
+}
+
+.file-label {
+  background: rgba(var(--primary-rgb), 0.1);
+  color: var(--primary);
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid var(--primary);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+.input-group label {
+  display: block;
+  color: #fff;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #fff;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.save-btn {
+  flex: 2;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.cancel-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid #ff4757;
+  color: #ff4757;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+/* تنسيق حقل الاختيار نفسه */
+.input-group select {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05); /* نفس شفافية باقي الحقول */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #fff; /* لون الكتابة أبيض */
+  cursor: pointer;
+  appearance: none; /* بيشيل السهم الافتراضي بتاع المتصفح لو حابب */
+  -webkit-appearance: none;
+}
+
+/* أهم جزء: تنسيق قائمة الاختيارات (اللي كانت بتظهر بيضاء) */
+.input-group select option {
+  background-color: #161b22; /* لون غامق يmatch الخلفية بتاعتك */
+  color: #fff; /* لون الخط جوه الاختيارات */
+  padding: 10px;
+}
+
+/* تحسين شكل الحقل لما نضغط عليه */
+.input-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.1);
+}

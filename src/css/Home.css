@@ -1,0 +1,243 @@
+.home-container {
+  min-height: calc(100vh - 80px); /* يملأ الشاشة تحت الناف بار */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 5%;
+  background-color: var(--main-bg);
+}
+
+.hero-section {
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 50px;
+  animation: fadeIn 1s ease-out;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: var(--text-white);
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.hero-title span {
+  color: var(--primary);
+  text-shadow: 0 0 20px rgba(0, 123, 255, 0.4);
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  max-width: 700px;
+  margin: 0 auto 40px;
+}
+
+/* الأزرار */
+.hero-btns {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.main-btn {
+  background-color: var(--primary);
+  color: white;
+  padding: 15px 35px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  box-shadow: 0 10px 25px rgba(0, 123, 255, 0.3);
+  transition: 0.3s ease;
+}
+
+.main-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 123, 255, 0.5);
+}
+
+.outline-btn {
+  background: rgba(255, 255, 255, 0.03);
+  color: white;
+  padding: 15px 35px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  font-weight: 700;
+  transition: 0.3s;
+}
+
+.outline-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* الكروت الإحصائية */
+.hero-stats {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.stat-card {
+  background: rgba(22, 27, 34, 0.6);
+  backdrop-filter: blur(10px);
+  padding: 25px 50px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-card h3 {
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 5px;
+}
+
+.stat-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* الأنيميشن */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ريسبونسيف الموبايل */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.2rem;
+  }
+
+  .hero-btns {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-stats {
+    flex-direction: row;
+    gap: 15px;
+  }
+
+  .stat-card {
+    padding: 20px;
+    flex: 1;
+  }
+}
+.glass-morph {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-10px);
+  border-color: var(--primary); /* افترضنا إن ده لون البراند عندك */
+}
+
+.stat-card h3 {
+  font-size: 2.5rem;
+  background: linear-gradient(45deg, #fff, var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 5px;
+}
+
+/* أنيميشن خفيف للنصوص عند الدخول */
+.animate-fade-in {
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* تصميم الستارة (Overlay) */
+.intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: #0d1117; /* لون الخلفية الداكن */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeOut 0.5s ease forwards 1.3s;
+}
+
+.intro-logo {
+  font-size: 3.5rem;
+  color: #fff;
+  font-weight: bold;
+  animation: logoZoom 1s ease-out;
+}
+
+.intro-logo span {
+  color: #007bff; /* لون البراند الأزرق */
+}
+
+.intro-line {
+  width: 0;
+  height: 3px;
+  background: #007bff;
+  margin-top: 15px;
+  animation: lineExpand 1s ease-out forwards;
+}
+
+@keyframes logoZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes lineExpand {
+  to {
+    width: 150px;
+  }
+}
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* أنيميشن ظهور المحتوى */
+.content-ready {
+  animation: slideUpIn 1s ease-out;
+}
+
+@keyframes slideUpIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

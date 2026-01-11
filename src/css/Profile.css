@@ -1,0 +1,187 @@
+.profile-page-container {
+  min-height: 90vh;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center; /* توسيط المحتوى */
+  align-items: flex-start;
+  background: radial-gradient(circle at top right, #1e293b, #0f172a);
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr; /* عمود صغير للإحصائيات وعمود كبير للفورم */
+  gap: 30px;
+  width: 100%;
+  max-width: 1000px; /* أهم سطر: عشان ميفردش في الصفحة كلها */
+}
+
+/* ستايل الكروت الزجاجية */
+.glass-morph {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+/* الكارت الجانبي (الإحصائيات) */
+.profile-side-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: center;
+}
+
+.stat-box {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  transition: 0.3s;
+}
+
+.stat-box i {
+  font-size: 2rem;
+  color: #3b82f6;
+  margin-bottom: 10px;
+}
+
+.stat-box h3 {
+  font-size: 1.8rem;
+  margin: 5px 0;
+  color: #fff;
+}
+
+.stat-box p {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+/* كارت الفورم الأساسي */
+.profile-main-card {
+  flex: 1;
+}
+
+.profile-main-card h2 {
+  margin-bottom: 30px;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.profile-main-card h2 span {
+  color: #3b82f6;
+}
+
+/* قسم الصورة الشخصية */
+.avatar-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.img-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #3b82f6;
+  padding: 3px;
+}
+
+.upload-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #3b82f6;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 3px solid #0f172a;
+  transition: 0.3s;
+}
+
+.upload-icon:hover {
+  background: #2563eb;
+  transform: scale(1.1);
+}
+
+/* المدخلات */
+.form-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* الاسم والايميل جنب بعض */
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.input-group input {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px 15px;
+  border-radius: 10px;
+  color: #fff;
+  transition: 0.3s;
+}
+
+.input-group input:focus {
+  border-color: #3b82f6;
+  outline: none;
+  background: rgba(15, 23, 42, 0.8);
+}
+
+.save-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: 0.3s;
+  margin-top: 10px;
+}
+
+.save-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* للموبايل: نخلي كل حاجة فوق بعض */
+@media (max-width: 768px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-inputs {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-side-card {
+    order: 2; /* ننزل الإحصائيات تحت الفورم في الموبايل */
+  }
+}
