@@ -9,6 +9,8 @@ import "../css/Navbar.css";
  * and manages admin notifications.
  */
 const Navbar = () => {
+  const API_BASE = import.meta.env.VITE_API_URL;
+  const IMAGE_BASE = API_BASE.replace("/api", ""); // سيحولها من .../api إلى الرابط الأساسي فقط
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -181,7 +183,7 @@ const Navbar = () => {
                   <img
                     src={
                       user?.avatar
-                        ? `http://localhost:5000/uploads/${user.avatar
+                        ? `${IMAGE_BASE}/uploads/${user.avatar
                             .split(/[\\/]/)
                             .pop()}?t=${new Date().getTime()}`
                         : `https://ui-avatars.com/api/?name=${
