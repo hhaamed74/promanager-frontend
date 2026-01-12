@@ -1,13 +1,17 @@
+/* --- 1. Main Navbar Structure --- */
 .navbar {
-  position: sticky; /* ثابتة تماماً في الأعلى */
+  /* Keeps the navbar fixed at the top while scrolling */
+  position: sticky;
   top: 0;
   width: 100%;
   height: 80px;
+  /* High z-index to ensure it stays above all page content */
   z-index: 1000;
-  /* التأثير الزجاجي */
+  /* Glassmorphism effect: Semi-transparent background with blur */
   background: rgba(11, 14, 20, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  /* Subtle bottom border for visual separation */
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
@@ -22,7 +26,7 @@
   align-items: center;
 }
 
-/* اللوجو */
+/* --- 2. Branding (Logo) --- */
 .logo a {
   font-size: 1.6rem;
   font-weight: 800;
@@ -30,10 +34,11 @@
 }
 
 .logo span {
+  /* Primary brand color for the highlighted part of the logo */
   color: var(--primary);
 }
 
-/* الروابط والتفاعلات */
+/* --- 3. Navigation Links & Hover Effects --- */
 .nav-links {
   display: flex;
   align-items: center;
@@ -48,7 +53,7 @@
   transition: var(--transition);
 }
 
-/* هوفر اللينكات - خط سفلي ذكي */
+/* Animated underline effect on hover/active */
 .nav-links a::after {
   content: "";
   position: absolute;
@@ -67,10 +72,11 @@
 
 .nav-links a:hover::after,
 .nav-links a.active::after {
+  /* Expands the underline to full width */
   width: 100%;
 }
 
-/* الأزرار */
+/* --- 4. Authentication & Action Buttons --- */
 .auth-btns {
   display: flex;
   align-items: center;
@@ -91,15 +97,17 @@
   box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
 }
 
+/* Advanced Logout Button with Slide-In Background */
 .logout-btn {
   color: #ff4757;
   font-weight: 700;
-  padding: 8px 25px; /* زودنا الـ padding شوية عشان الحركة تبان */
+  padding: 8px 25px;
   border: 1px solid #ff4757;
   border-radius: 8px;
-  position: relative; /* ضروري عشان الطبقة اللي هتتحرك */
+  position: relative;
   z-index: 1;
-  overflow: hidden; /* عشان الطبقة متخرجش بره حدود الزرار */
+  /* Hide the sliding background when it is outside the button */
+  overflow: hidden;
   background: transparent;
   transition: all 0.4s ease-in-out;
   display: flex;
@@ -107,84 +115,36 @@
   justify-content: center;
 }
 
-/* الطبقة اللي هتتحرك من اليمين للشمال */
+/* The background layer that moves from right to left */
 .logout-btn::before {
   content: "";
   position: absolute;
   top: 0;
-  right: -100%; /* تبدأ بره الزرار من ناحية اليمين */
+  /* Starts completely outside the right boundary */
+  right: -100%;
   width: 100%;
   height: 100%;
   background-color: #ff4757;
   transition: all 0.4s ease-in-out;
-  z-index: -1; /* عشان تكون تحت النص */
+  /* Places background behind the text */
+  z-index: -1;
 }
 
-/* حالة الهوفر */
 .logout-btn:hover {
-  color: #fff; /* لون النص يتغير للأبيض */
+  color: #fff;
 }
 
 .logout-btn:hover::before {
-  right: 0; /* تتحرك وتملأ الزرار بالكامل */
+  /* Moves to cover the entire button area on hover */
+  right: 0;
 }
 
-/* حركة بسيطة عشان الزرار ميبقاش "ناشف" */
 .logout-btn:active {
+  /* Click feedback effect */
   transform: scale(0.95);
 }
-/* ريسبونسيف الموبايل */
-.menu-icon {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-}
 
-.menu-icon span {
-  width: 25px;
-  height: 3px;
-  background: var(--text-white);
-  transition: 0.3s;
-}
-
-@media (max-width: 768px) {
-  .menu-icon {
-    display: flex;
-  }
-
-  .nav-links {
-    position: absolute;
-    top: 80px; /* نفس ارتفاع الناف بار */
-    right: -100%;
-    width: 100%;
-    height: calc(100vh - 80px);
-
-    /* التعديل هنا: لون صريح وغامق عشان ينفصل عن البودي */
-    background: #111827; /* لون أغمق من البودي (Slate 900) */
-
-    flex-direction: column;
-    padding: 40px;
-    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* حركة أنعم */
-    z-index: 999;
-
-    /* إضافة ظل عشان يبان إنه فوق المحتوى */
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
-
-    /* لو حابب تخليه بلوري بس بخلفية أغمق */
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-
-  .nav-links.open {
-    right: 0; /* تظهر عند الضغط */
-  }
-
-  .auth-btns {
-    flex-direction: column;
-    width: 100%;
-  }
-}
+/* --- 5. User Profile Navigation --- */
 .user-nav-section {
   display: flex;
   align-items: center;
@@ -197,6 +157,7 @@
   gap: 12px;
   background: rgba(255, 255, 255, 0.05);
   padding: 5px 12px;
+  /* Pill-shaped container */
   border-radius: 50px;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -229,7 +190,6 @@
   cursor: pointer;
   font-size: 1.1rem;
   transition: 0.3s;
-  padding: 0;
   display: flex;
   align-items: center;
 }
@@ -239,19 +199,7 @@
   color: #ff6b81;
 }
 
-/* للموبايل: ترتيب العناصر */
-@media (max-width: 768px) {
-  .user-nav-section {
-    flex-direction: column;
-    width: 100%;
-  }
-  .nav-profile {
-    width: 100%;
-    justify-content: center;
-    margin-top: 10px;
-  }
-}
-/* --- Notifications Styles --- */
+/* --- 6. Notification System --- */
 .notif-wrapper {
   position: relative;
   margin: 0 15px;
@@ -272,6 +220,7 @@
   transform: scale(1.1);
 }
 
+/* Red counter badge for unread notifications */
 .notif-badge {
   position: absolute;
   top: -8px;
@@ -286,9 +235,11 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
+  /* Border helps the badge stand out against the icon */
   border: 2px solid #0f172a;
 }
 
+/* The dropdown menu showing notification items */
 .notif-dropdown {
   position: absolute;
   top: 50px;
@@ -296,6 +247,7 @@
   transform: translateX(-50%);
   width: 300px;
   max-height: 400px;
+  /* Dark slate background with high opacity for readability */
   background: rgba(30, 41, 59, 0.95) !important;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -312,16 +264,6 @@
   margin-bottom: 15px;
   padding-bottom: 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.notif-header h4 {
-  font-size: 1rem;
-  color: #fff;
-}
-.notif-header span {
-  cursor: pointer;
-  color: #94a3b8;
-  font-size: 0.8rem;
 }
 
 .notif-list {
@@ -343,6 +285,7 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
+/* Icons for different notification types (User vs Project) */
 .notif-icon {
   width: 35px;
   height: 35px;
@@ -351,6 +294,7 @@
   align-items: center;
   justify-content: center;
   font-size: 0.9rem;
+  /* Prevent icon from shrinking in flex container */
   flex-shrink: 0;
 }
 
@@ -363,21 +307,63 @@
   color: #10b981;
 }
 
-.notif-content p {
-  font-size: 0.85rem;
-  color: #e2e8f0;
-  margin: 0;
-  line-height: 1.4;
-}
-
 .notif-time {
   font-size: 0.7rem;
   color: #64748b;
 }
 
-.no-notif {
-  text-align: center;
-  padding: 20px;
-  color: #94a3b8;
-  font-size: 0.9rem;
+/* --- 7. Responsive Mobile Menu --- */
+.menu-icon {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.menu-icon span {
+  width: 25px;
+  height: 3px;
+  background: var(--text-white);
+  transition: 0.3s;
+}
+
+@media (max-width: 768px) {
+  .menu-icon {
+    display: flex;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 80px;
+    right: -100%; /* Hidden by default off-screen */
+    width: 100%;
+    height: calc(100vh - 80px);
+    /* Solid dark background to ensure it covers the body content */
+    background: #111827;
+    flex-direction: column;
+    padding: 40px;
+    /* Smooth slide-in animation using cubic-bezier */
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 999;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .nav-links.open {
+    /* Triggered via JS to show the menu */
+    right: 0;
+  }
+
+  .auth-btns,
+  .user-nav-section {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .nav-profile {
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
+  }
 }

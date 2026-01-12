@@ -1,13 +1,18 @@
-/* السور الأساسي للداش بورد - الوضع المظلم */
+/* --- 1. Main Dashboard Wrapper --- */
 .dashboard-page {
-  background-color: #0b0e14; /* أسود عميق زي باقي الموقع */
+  /* Deep black background consistent with the dark theme */
+  background-color: #0b0e14;
+  /* Full screen coverage regardless of content length */
   min-height: 100vh;
+  /* Top and bottom padding for breathing space */
   padding: 40px 0;
   color: #ffffff;
 }
 
 .dashboard-page .dashboard-container {
+  /* Horizontal padding for mobile responsiveness */
   padding: 0 20px;
+  /* Limit maximum width for large desktops */
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -15,24 +20,26 @@
 .dashboard-page .dashboard-container h2 {
   margin-bottom: 30px;
   font-size: 2rem;
-  color: #ffffff;
   font-weight: 700;
 }
 
+/* Branding color for header spans */
 .dashboard-page .dashboard-container h2 span {
-  color: #6c63ff; /* اللون البنفسجي المميز */
+  color: #6c63ff;
 }
 
-/* شبكة الإحصائيات - Cards */
+/* --- 2. Statistics Grid Layout --- */
 .dashboard-page .stats-grid {
   display: grid;
+  /* Automatically adjust columns based on screen size (minimum 240px width) */
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 25px;
   margin-bottom: 40px;
 }
 
+/* --- 3. Statistic Cards Styling --- */
 .dashboard-page .stat-card {
-  background: #1a1f29; /* رمادي غامق جداً للكروت */
+  background: #1a1f29;
   padding: 25px;
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
@@ -40,11 +47,13 @@
   flex-direction: column;
   justify-content: center;
   transition: all 0.3s ease;
-  border: 1px solid #2d3446; /* حدود خفيفة جداً */
+  border: 1px solid #2d3446;
   position: relative;
+  /* Ensures inner elements like 'after' don't leak out */
   overflow: hidden;
 }
 
+/* Bottom accent line for cards */
 .dashboard-page .stat-card::after {
   content: "";
   position: absolute;
@@ -55,6 +64,7 @@
   background: #6c63ff;
 }
 
+/* Lift effect on hover */
 .dashboard-page .stat-card:hover {
   transform: translateY(-8px);
   background: #242b38;
@@ -63,7 +73,7 @@
 
 .dashboard-page .stat-card h3 {
   font-size: 1rem;
-  color: #a0aec0; /* لون رمادي فاتح للنصوص */
+  color: #a0aec0;
   margin-bottom: 8px;
   font-weight: 500;
 }
@@ -71,10 +81,9 @@
 .dashboard-page .stat-card p {
   font-size: 2.5rem;
   font-weight: 800;
-  color: #ffffff;
 }
 
-/* تنويع الألوان للمربعات */
+/* Color variations for bottom accent lines */
 .dashboard-page .stat-card.blue::after {
   background: #3182ce;
 }
@@ -82,19 +91,31 @@
   background: #48bb78;
 }
 
-/* حاوية الجدول */
+.stat-card .icon {
+  font-size: 2.5rem;
+  /* Faded appearance to stay in the background */
+  opacity: 0.2;
+  position: absolute;
+  right: 20px;
+}
+
+/* --- 4. Admin Table Section --- */
 .dashboard-page .admin-table-container {
-  background: #1a1f29;
+  /* Semi-transparent slate background */
+  background: rgba(15, 23, 42, 0.5);
   padding: 30px;
   border-radius: 20px;
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+  /* Horizontal scroll for mobile devices */
   overflow-x: auto;
-  border: 1px solid #2d3446;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .dashboard-page .admin-table {
   width: 100%;
+  /* Remove gaps between table cells */
   border-collapse: collapse;
+  /* Align text to the right for RTL support */
   text-align: right;
 }
 
@@ -124,11 +145,12 @@
   width: 40px;
   height: 40px;
   border-radius: 10px;
+  /* Maintain aspect ratio for square avatars */
   object-fit: cover;
   border: 1px solid #3f4759;
 }
 
-/* الحالات والأدوار - ألوان مناسبة للوضع المظلم */
+/* --- 5. Badges and Indicators --- */
 .dashboard-page .role-badge {
   padding: 6px 14px;
   border-radius: 10px;
@@ -139,69 +161,17 @@
 }
 
 .dashboard-page .role-badge.admin {
-  background: rgba(108, 99, 255, 0.2);
-  color: #a7a2ff;
+  /* Red tint for Admin role */
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
 }
 
-.dashboard-page .status-indicator {
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 600;
+.dashboard-page .role-badge.user {
+  /* Blue tint for User role */
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
 }
 
-.dashboard-page .status-indicator.active {
-  background: rgba(72, 187, 120, 0.2);
-  color: #68d391;
-}
-/* حاوية أزرار التحكم */
-.dashboard-page .action-btns {
-  display: flex;
-  gap: 12px;
-  justify-content: flex-start;
-}
-
-/* التنسيق العام للزرار */
-.dashboard-page .action-btn {
-  width: 38px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: #2d3446; /* لون متناسق مع الكروت */
-  color: #a0aec0;
-  font-size: 1.1rem;
-}
-
-/* تأثيرات الـ Hover العامة */
-.dashboard-page .action-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-/* زر الحذف - Delete */
-.dashboard-page .action-btn.delete:hover {
-  background: #e53e3e; /* أحمر */
-  color: #fff;
-}
-
-/* زر التعطيل - Deactivate (لما يكون اليوزر نشط وعاوز تقفله) */
-.dashboard-page .action-btn.toggle.deactivate:hover {
-  background: #dd6b20; /* برتقالي تحذيري */
-  color: #fff;
-}
-
-/* زر التفعيل - Activate (لما يكون اليوزر معطل وعاوز تفتحه) */
-.dashboard-page .action-btn.toggle.activate:hover {
-  background: #38a169; /* أخضر */
-  color: #fff;
-}
-
-/* تحسين شكل عمود الحالة (Status Labels) */
 .dashboard-page .status-indicator {
   padding: 5px 12px;
   border-radius: 8px;
@@ -213,19 +183,60 @@
 }
 
 .dashboard-page .status-indicator.active {
-  background: rgba(72, 187, 120, 0.15);
-  color: #68d391;
+  color: #10b981;
 }
 
 .dashboard-page .status-indicator.inactive {
-  background: rgba(229, 62, 62, 0.15);
-  color: #fc8181;
+  color: #94a3b8;
 }
 
-/* أيقونات FontAwesome داخل الأزرار */
-.dashboard-page .action-btn i {
-  pointer-events: none; /* عشان الضغطة تيجي على الزرار مش الأيقونة */
+/* --- 6. Action Buttons Styling --- */
+.dashboard-page .action-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-start;
 }
+
+.dashboard-page .action-btn {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  /* Smooth movement using cubic-bezier timing */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #2d3446;
+  color: #a0aec0;
+  font-size: 1.1rem;
+}
+
+.dashboard-page .action-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-page .action-btn.delete:hover {
+  background: #e53e3e;
+  color: #fff;
+}
+
+.dashboard-page .action-btn.toggle.deactivate:hover {
+  background: #dd6b20;
+}
+
+.dashboard-page .action-btn.toggle.activate:hover {
+  background: #38a169;
+}
+
+/* Ignore icon clicks to ensure the button event fires correctly */
+.dashboard-page .action-btn i {
+  pointer-events: none;
+}
+
+/* --- 7. Search and Actions Header --- */
 .table-header-actions {
   display: flex;
   justify-content: space-between;
@@ -241,6 +252,7 @@
 }
 
 .search-box i {
+  /* Position search icon inside the input */
   position: absolute;
   left: 15px;
   top: 50%;
@@ -250,7 +262,8 @@
 
 .search-box input {
   width: 100%;
-  padding: 10px 15px 10px 40px; /* مسافة للأيقونة */
+  /* Extra left padding to make room for the icon */
+  padding: 10px 15px 10px 40px;
   background: #1a202c;
   border: 1px solid #2d3748;
   border-radius: 10px;
@@ -261,10 +274,10 @@
 .search-box input:focus {
   outline: none;
   border-color: #4299e1;
+  /* Focus halo effect */
   box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
 }
 
-/* الهيدر وزرار التصدير */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -291,28 +304,12 @@
   transform: translateY(-2px);
 }
 
-/* تحسين الكروت */
-.stat-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 25px;
-  position: relative;
-  overflow: hidden;
-}
-
-.stat-card .icon {
-  font-size: 2.5rem;
-  opacity: 0.2;
-  position: absolute;
-  right: 20px;
-}
-
-/* قسم الرسم البياني */
+/* --- 8. Charts Section Styling --- */
 .charts-section {
   margin: 30px 0;
   padding: 25px;
   border-radius: 20px;
+  /* Very subtle transparent layer for the chart area */
   background: rgba(255, 255, 255, 0.03);
 }
 
@@ -322,30 +319,7 @@
   font-size: 1.2rem;
 }
 
-/* تخصيص التول تيب بتاع الرسم البياني */
+/* Recharts library specific customization */
 .recharts-tooltip-cursor {
   fill: rgba(255, 255, 255, 0.05);
-}
-
-/* تحسين الجدول */
-.admin-table-container {
-  background: rgba(15, 23, 42, 0.5);
-  border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.role-badge.admin {
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-}
-.role-badge.user {
-  background: rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-}
-
-.status-indicator.active {
-  color: #10b981;
-}
-.status-indicator.inactive {
-  color: #94a3b8;
 }

@@ -1,28 +1,36 @@
-/* الحاوية الأساسية للسنترة */
+/* --- 1. Main Authentication Container --- */
 .auth-container {
-  min-height: calc(100vh - 80px); /* يملأ الشاشة مع مراعاة الناف بار */
+  /* Fills the screen height minus the navbar height (estimated 80px) */
+  min-height: calc(100vh - 80px);
+  /* Centers the card both vertically and horizontally */
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 40px 20px;
-  background-color: var(--main-bg); /* الأسود الملكي */
+  /* Uses the global dark theme background */
+  background-color: var(--main-bg);
 }
 
-/* الكارد الزجاجي */
+/* --- 2. Glassmorphism Card Style --- */
 .auth-card {
   width: 100%;
   max-width: 480px;
-  background: rgba(22, 27, 34, 0.4); /* شفافية غامقة */
-  backdrop-filter: blur(20px); /* تغبيش زجاجي قوي */
+  /* Semi-transparent dark background for the glass effect */
+  background: rgba(22, 27, 34, 0.4);
+  /* Standard and Webkit blur effects for the frosted glass look */
+  backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1); /* برواز خفيف */
+  /* Thin border to define the card edges in the dark theme */
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 24px;
   padding: 45px;
+  /* Deep shadow for a 3D elevated appearance */
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-  animation: fadeInUp 0.8s ease-out; /* أنيميشن ظهور الكارد */
+  /* Triggers the entry animation on load */
+  animation: fadeInUp 0.8s ease-out;
 }
 
-/* عنوان الكارد */
+/* --- 3. Header Section --- */
 .auth-header {
   text-align: center;
   margin-bottom: 35px;
@@ -40,7 +48,7 @@
   font-size: 0.95rem;
 }
 
-/* الحقول والمدخلات */
+/* --- 4. Form Layout & Inputs --- */
 .auth-form {
   display: flex;
   flex-direction: column;
@@ -54,24 +62,29 @@
 .input-group input {
   width: 100%;
   padding: 15px 20px;
+  /* Dark input field background */
   background: rgba(13, 17, 23, 0.6);
   border: 2px solid rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   color: var(--text-white);
   font-size: 1rem;
   outline: none;
+  /* Cubic-bezier provides a more sophisticated transition feel */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* أنيميشن عند الوقوف على الحقل (Focus) */
+/* Focus state animation for input fields */
 .input-group input:focus {
+  /* Highlights the field with the primary color */
   border-color: var(--primary);
   background: rgba(13, 17, 23, 0.9);
+  /* Subtle glow effect around the input */
   box-shadow: 0 0 15px rgba(0, 123, 255, 0.15);
-  transform: translateY(-2px); /* رفعة خفيفة جداً */
+  /* Lifts the input slightly on the Y-axis */
+  transform: translateY(-2px);
 }
 
-/* زر التسجيل */
+/* --- 5. Primary Action Button --- */
 .auth-btn {
   width: 100%;
   padding: 16px;
@@ -84,20 +97,23 @@
   cursor: pointer;
   margin-top: 10px;
   transition: all 0.3s ease;
+  /* Blue shadow to match the button color */
   box-shadow: 0 10px 20px rgba(0, 98, 255, 0.2);
 }
 
 .auth-btn:hover {
   background-color: #0056d2;
+  /* Hover elevation effect */
   transform: translateY(-3px);
   box-shadow: 0 15px 30px rgba(0, 98, 255, 0.3);
 }
 
 .auth-btn:active {
+  /* Button 'press' effect */
   transform: translateY(-1px);
 }
 
-/* التذييل */
+/* --- 6. Footer Links --- */
 .auth-footer {
   margin-top: 30px;
   text-align: center;
@@ -117,7 +133,8 @@
 .auth-footer a:hover {
   text-decoration: underline;
 }
-/* تنسيق خاص للـ Textarea */
+
+/* --- 7. Project Specific Textarea --- */
 .input-group textarea {
   width: 100%;
   padding: 15px 20px;
@@ -127,7 +144,8 @@
   color: var(--text-white);
   font-size: 1rem;
   outline: none;
-  resize: none; /* عشان المستخدم ميبوظش شكل الكارد */
+  /* Prevents the user from breaking the layout by manual resizing */
+  resize: none;
   transition: all 0.3s ease;
   font-family: inherit;
 }
@@ -137,7 +155,7 @@
   background: rgba(13, 17, 23, 1);
 }
 
-/* تنسيق منطقة رفع الملفات */
+/* --- 8. File Upload Styling --- */
 .file-input-wrapper {
   margin-bottom: 10px;
 }
@@ -148,6 +166,7 @@
   justify-content: center;
   padding: 15px;
   background: rgba(255, 255, 255, 0.03);
+  /* Dashed border indicates a drop-zone or file selection area */
   border: 2px dashed rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   cursor: pointer;
@@ -160,11 +179,12 @@
   background: rgba(0, 123, 255, 0.05);
 }
 
+/* Hides the default browser file input button */
 .file-label input {
-  display: none; /* بنخفي الزرار التقليدي البايخ بتاع المتصفح */
+  display: none;
 }
 
-/* معاينة الصورة قبل الرفع */
+/* --- 9. Image Preview Styling --- */
 .image-preview {
   margin-top: 15px;
   width: 100%;
@@ -177,28 +197,34 @@
 .image-preview img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* عشان الصورة تملأ المكان مهما كان مقاسها */
+  /* Ensures the image fills the area without distortion */
+  object-fit: cover;
 }
 
-/* تعديل عرض الكارد للمشاريع */
+/* --- 10. Variant for Project Modification --- */
 .project-card {
-  max-width: 550px; /* بنخليها أعرض شوية من اللوجن عشان الـ textarea */
+  /* Slightly wider than auth-card to accommodate form details */
+  max-width: 550px;
 }
-/* Keyframes لأنيميشن الظهور */
+
+/* --- 11. Animations --- */
 @keyframes fadeInUp {
   from {
+    /* Starts invisible and 30px lower */
     opacity: 0;
     transform: translateY(30px);
   }
   to {
+    /* Ends at original position and fully visible */
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* ريسبونسيف الموبايل */
+/* --- 12. Mobile Responsiveness --- */
 @media (max-width: 480px) {
   .auth-card {
+    /* Reduce padding and border-radius for small mobile screens */
     padding: 30px 20px;
     border-radius: 20px;
   }

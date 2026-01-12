@@ -1,22 +1,29 @@
+/* --- 1. Main Footer Wrapper --- */
 .footer {
+  /* Semi-transparent dark slate background */
   background: rgba(15, 23, 42, 0.95);
+  /* Frosted glass effect to blend with the main site theme */
   backdrop-filter: blur(10px);
+  /* Subtle top border for section separation */
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   color: #94a3b8;
+  /* Top padding for content, bottom padding for the copyright section */
   padding: 60px 0 20px;
   margin-top: 50px;
 }
 
+/* --- 2. Footer Layout Container --- */
 .footer-container {
   max-width: 1200px;
   margin: 0 auto;
+  /* 3-column grid layout: 1st column is twice as wide as others */
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr; /* تقسيم الأعمدة */
+  grid-template-columns: 2fr 1fr 1fr;
   gap: 40px;
   padding: 0 20px;
 }
 
-/* اللوجو داخل الفوتر */
+/* --- 3. Logo and Branding --- */
 .footer-logo a {
   font-size: 1.8rem;
   font-weight: 800;
@@ -25,16 +32,18 @@
 }
 
 .footer-logo span {
+  /* Primary blue color for branding accents */
   color: #3b82f6;
 }
 
 .footer-desc {
   margin-top: 15px;
   line-height: 1.6;
+  /* Limits width for better readability in the wide column */
   max-width: 350px;
 }
 
-/* العناوين الجانبية */
+/* --- 4. Section Headers --- */
 .footer-section h4 {
   color: #fff;
   margin-bottom: 20px;
@@ -43,6 +52,7 @@
   padding-bottom: 8px;
 }
 
+/* Decorative blue underline for section titles */
 .footer-section h4::after {
   content: "";
   position: absolute;
@@ -53,7 +63,7 @@
   background: #3b82f6;
 }
 
-/* روابط القائمة */
+/* --- 5. Navigation Links --- */
 .footer-section ul {
   list-style: none;
   padding: 0;
@@ -70,10 +80,11 @@
 
 .footer-section ul li a:hover {
   color: #3b82f6;
-  padding-right: 5px; /* حركة بسيطة عند الهوفر */
+  /* Visual feedback: slides the link slightly to the right on hover */
+  padding-right: 5px;
 }
 
-/* أيقونات السوشيال */
+/* --- 6. Social Media Icons --- */
 .social-icons {
   display: flex;
   gap: 15px;
@@ -95,15 +106,18 @@
 
 .social-icons a:hover {
   background: #3b82f6;
+  /* Elevation effect on hover */
   transform: translateY(-5px);
+  /* Blue glow shadow matching the hover background */
   box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
 }
 
-/* الجزء السفلي (الحقوق) */
+/* --- 7. Footer Bottom (Copyright) --- */
 .footer-bottom {
   text-align: center;
   margin-top: 50px;
   padding-top: 20px;
+  /* Secondary border for the final footer section */
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   font-size: 0.9rem;
 }
@@ -120,10 +134,12 @@
   color: #60a5fa;
 }
 
-/* ريسبونسيف الموبايل */
+/* --- 8. Mobile Responsiveness --- */
 @media (max-width: 768px) {
   .footer-container {
+    /* Stack columns vertically on mobile */
     grid-template-columns: 1fr;
+    /* Center all text for a balanced mobile view */
     text-align: center;
   }
 
@@ -131,11 +147,13 @@
     margin: 15px auto;
   }
 
+  /* Center the decorative underline for section titles */
   .footer-section h4::after {
     right: 50%;
     transform: translateX(50%);
   }
 
+  /* Center the flex container for social icons */
   .social-icons {
     justify-content: center;
   }

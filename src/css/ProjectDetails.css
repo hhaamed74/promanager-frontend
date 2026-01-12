@@ -1,10 +1,14 @@
+/* --- 1. Main Details Layout --- */
 .details-container {
+  /* Dynamic horizontal padding using percentages for wide-screen balance */
   padding: 40px 10%;
   min-height: 100vh;
   background: var(--main-bg);
 }
 
+/* --- 2. Navigation Elements --- */
 .back-btn {
+  /* Clean outlined button style */
   background: transparent;
   color: var(--primary);
   border: 1px solid var(--primary);
@@ -12,23 +16,40 @@
   border-radius: 8px;
   cursor: pointer;
   margin-bottom: 20px;
+  transition: all 0.3s ease;
 }
 
+.back-btn:hover {
+  /* Invert colors on hover for clear feedback */
+  background: var(--primary);
+  color: #fff;
+}
+
+/* --- 3. The Details Card (Glassmorphism) --- */
 .details-card {
+  /* Semi-transparent dark background */
   background: rgba(22, 27, 34, 0.6);
+  /* Strong frosted glass effect */
   backdrop-filter: blur(20px);
   border-radius: 25px;
+  /* Defining card boundaries in a dark environment */
   border: 1px solid rgba(255, 255, 255, 0.1);
+  /* Prevents the image from overflowing the rounded corners */
   overflow: hidden;
+  /* Heavy shadow for a deep elevated look */
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
 }
 
+/* --- 4. Hero Image Section --- */
 .details-image img {
   width: 100%;
+  /* Limits height to prevent pushing content too far down */
   max-height: 450px;
+  /* Ensures the image fills the space without stretching */
   object-fit: cover;
 }
 
+/* --- 5. Content Structure --- */
 .details-content {
   padding: 40px;
 }
@@ -45,10 +66,13 @@
   font-size: 2.5rem;
 }
 
+/* --- 6. Meta Information Grid --- */
 .details-meta {
   display: grid;
+  /* Responsive grid that wraps items automatically based on 200px width */
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
+  /* Slightly lighter background to distinguish from the card */
   background: rgba(255, 255, 255, 0.03);
   padding: 20px;
   border-radius: 15px;
@@ -57,6 +81,7 @@
 
 .meta-item strong {
   color: var(--primary);
+  /* Places the label on its own line */
   display: block;
   margin-bottom: 5px;
 }
@@ -65,6 +90,7 @@
   color: #fff;
 }
 
+/* --- 7. Description & Body Text --- */
 .details-description h3 {
   color: var(--primary);
   margin-bottom: 15px;
@@ -72,10 +98,12 @@
 
 .details-description p {
   color: var(--text-muted);
+  /* Increased line height for professional readability */
   line-height: 1.8;
   font-size: 1.1rem;
 }
 
+/* --- 8. Action Buttons --- */
 .edit-btn {
   margin-top: 30px;
   background: var(--primary);
@@ -85,4 +113,11 @@
   border-radius: 10px;
   font-weight: bold;
   cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.edit-btn:hover {
+  /* Subtle lift and glow effect on hover */
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
 }

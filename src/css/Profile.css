@@ -1,31 +1,41 @@
+/* --- 1. Main Page Container --- */
 .profile-page-container {
+  /* Dynamic height: covers most of the viewport height */
   min-height: 90vh;
   padding: 40px 20px;
+  /* Centering the grid both horizontally and vertically */
   display: flex;
-  justify-content: center; /* توسيط المحتوى */
+  justify-content: center;
   align-items: flex-start;
+  /* Modern radial background for depth */
   background: radial-gradient(circle at top right, #1e293b, #0f172a);
 }
 
+/* --- 2. Grid Layout Structure --- */
 .profile-grid {
   display: grid;
-  grid-template-columns: 300px 1fr; /* عمود صغير للإحصائيات وعمود كبير للفورم */
+  /* Defined columns: 300px for stats sidebar and remaining space (1fr) for the form */
+  grid-template-columns: 300px 1fr;
   gap: 30px;
   width: 100%;
-  max-width: 1000px; /* أهم سطر: عشان ميفردش في الصفحة كلها */
+  /* Ensures the layout remains centered and readable on wide screens */
+  max-width: 1000px;
 }
 
-/* ستايل الكروت الزجاجية */
+/* --- 3. Glassmorphism Design System --- */
 .glass-morph {
+  /* Semi-transparent background for the glass effect */
   background: rgba(255, 255, 255, 0.03);
+  /* Frosting effect to blur the background behind the card */
   backdrop-filter: blur(10px);
+  /* Soft border for visibility in dark mode */
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   padding: 30px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
 }
 
-/* الكارت الجانبي (الإحصائيات) */
+/* --- 4. Sidebar (Statistics) --- */
 .profile-side-card {
   display: flex;
   flex-direction: column;
@@ -42,7 +52,7 @@
 
 .stat-box i {
   font-size: 2rem;
-  color: #3b82f6;
+  color: #3b82f6; /* Brand blue color for icons */
   margin-bottom: 10px;
 }
 
@@ -53,12 +63,13 @@
 }
 
 .stat-box p {
-  color: #94a3b8;
+  color: #94a3b8; /* Muted text color for labels */
   font-size: 0.9rem;
 }
 
-/* كارت الفورم الأساسي */
+/* --- 5. Main Card & Form Area --- */
 .profile-main-card {
+  /* Takes the rest of the available grid space */
   flex: 1;
 }
 
@@ -72,7 +83,7 @@
   color: #3b82f6;
 }
 
-/* قسم الصورة الشخصية */
+/* --- 6. Profile Avatar Section --- */
 .avatar-section {
   display: flex;
   justify-content: center;
@@ -89,12 +100,13 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: cover; /* Ensures image fills the circle without distortion */
   border: 4px solid #3b82f6;
   padding: 3px;
 }
 
 .upload-icon {
+  /* Positions the floating upload button at the bottom right of the avatar */
   position: absolute;
   bottom: 0;
   right: 0;
@@ -106,19 +118,21 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  /* Border matches the page background to look like a cutout */
   border: 3px solid #0f172a;
   transition: 0.3s;
 }
 
 .upload-icon:hover {
   background: #2563eb;
-  transform: scale(1.1);
+  transform: scale(1.1); /* Slight enlargement on hover */
 }
 
-/* المدخلات */
+/* --- 7. Form Fields --- */
 .form-inputs {
+  /* Splits inputs into two columns (e.g., Name and Email side-by-side) */
   display: grid;
-  grid-template-columns: 1fr 1fr; /* الاسم والايميل جنب بعض */
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
@@ -135,6 +149,7 @@
 }
 
 .input-group input {
+  /* Darker background for inputs for better contrast */
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 12px 15px;
@@ -149,8 +164,10 @@
   background: rgba(15, 23, 42, 0.8);
 }
 
+/* --- 8. Save Button --- */
 .save-btn {
   width: 100%;
+  /* Modern gradient background */
   background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
   padding: 14px;
@@ -167,21 +184,25 @@
 }
 
 .save-btn:hover {
+  /* Slight dimming and lift effect */
   opacity: 0.9;
   transform: translateY(-2px);
 }
 
-/* للموبايل: نخلي كل حاجة فوق بعض */
+/* --- 9. Mobile Responsiveness --- */
 @media (max-width: 768px) {
   .profile-grid {
+    /* Stack sidebar and main card vertically on mobile */
     grid-template-columns: 1fr;
   }
 
   .form-inputs {
+    /* Force inputs to take full width on mobile */
     grid-template-columns: 1fr;
   }
 
   .profile-side-card {
-    order: 2; /* ننزل الإحصائيات تحت الفورم في الموبايل */
+    /* Moves statistics below the form for better mobile flow */
+    order: 2;
   }
 }

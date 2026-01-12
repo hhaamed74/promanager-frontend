@@ -1,76 +1,115 @@
-/* 1. تصفير المسافات وإعدادات الصندوق */
+/* 1. Reset browser defaults and box sizing */
 * {
+  /* Remove default browser margins */
   margin: 0;
+  /* Remove default browser padding */
   padding: 0;
+  /* Include padding and borders in the element's total width and height */
   box-sizing: border-box;
 }
 
-/* 2. الألوان الأساسية والمتغيرات */
+/* 2. Global variables and color palette */
 :root {
-  --main-bg: #0b0e14; /* أسود عميق */
-  --card-bg: #161b22; /* درجة أفتح للكروت */
-  --primary: #007bff; /* أزرق صريح */
+  /* Deep black background color */
+  --main-bg: #0b0e14;
+  /* Slightly lighter background for cards/containers */
+  --card-bg: #161b22;
+  /* Primary blue brand color */
+  --primary: #007bff;
+  /* Pure white color for main text */
   --text-white: #ffffff;
-  --text-muted: #94a3b8; /* لون للنصوص الثانوية */
+  /* Grayish blue for secondary or muted text */
+  --text-muted: #94a3b8;
+  /* Standard duration and timing function for animations */
   --transition: 0.3s ease;
 }
 
-/* 3. إعدادات الصفحة والجسم */
+/* 3. Global body and page settings */
 body {
+  /* Set a clean, modern font stack */
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  /* Apply the global background color */
   background-color: var(--main-bg);
+  /* Apply the global white text color */
   color: var(--text-white);
-  direction: rtl; /* الاتجاه عربي */
+  /* Set document direction to Right-to-Left for Arabic support */
+  direction: rtl;
+  /* Set vertical spacing between lines of text */
   line-height: 1.6;
+  /* Ensure the body at least covers the full viewport height */
   min-height: 100vh;
-  overflow-x: hidden; /* منع السكرول العرضي */
+  /* Prevent horizontal scrolling caused by overflowing elements */
+  overflow-x: hidden;
 }
 
-/* 4. تنسيقات الروابط والأزرار الافتراضية */
+/* 4. Hyperlink and Button reset styles */
 a {
+  /* Remove the default underline from links */
   text-decoration: none;
+  /* Inherit text color from parent instead of using browser blue */
   color: inherit;
+  /* Apply smooth transition for hover effects */
   transition: var(--transition);
 }
 
 button {
+  /* Change cursor to pointer when hovering over buttons */
   cursor: pointer;
+  /* Remove default browser button borders */
   border: none;
+  /* Remove focus outline (handle via custom focus states if needed) */
   outline: none;
+  /* Remove default button background color */
   background: none;
+  /* Ensure buttons use the same font as the rest of the page */
   font-family: inherit;
 }
 
-/* 5. حاوية المحتوى الرئيسية */
+/* 5. Main layout container for centering content */
 .container {
+  /* Set width to 90% of the parent container */
   width: 90%;
+  /* Restrict the maximum width for large screens */
   max-width: 1300px;
+  /* Center the container horizontally */
   margin: 0 auto;
 }
 
-/* 6. تنسيق بسيط للسكرول بار (اختياري لشكل احترافي) */
+/* 6. Professional Custom Scrollbar Styling (Webkit only) */
 ::-webkit-scrollbar {
+  /* Define the total width of the vertical scrollbar */
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
+  /* Style the background path of the scrollbar */
   background: var(--main-bg);
 }
 
 ::-webkit-scrollbar-thumb {
+  /* Style the draggable handle of the scrollbar */
   background: #30363d;
+  /* Round the corners of the scrollbar handle */
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
+  /* Change color of the handle when user hovers over it */
   background: var(--primary);
 }
+
+/* 7. Application Layout Wrapper */
 .app-wrapper {
+  /* Enable Flexbox layout for the main container */
   display: flex;
+  /* Stack children vertically (Header, Main, Footer) */
   flex-direction: column;
-  min-height: 100vh; /* طول الشاشة بالكامل */
+  /* Ensure the wrapper takes up at least the full screen height */
+  min-height: 100vh;
 }
 
+/* 8. Main Content Area */
 .main-content {
-  flex: 1; /* هذا السطر يجعل المحتوى يتمدد ويدفع الفوتر للأسفل */
+  /* Allow this section to grow and fill available space, pushing the footer down */
+  flex: 1;
 }

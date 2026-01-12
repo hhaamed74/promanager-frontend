@@ -1,21 +1,30 @@
+/* --- 1. Main Edit Page Wrapper --- */
 .edit-container {
+  /* Dynamic padding: 60px vertical, 5% horizontal for responsiveness */
   padding: 60px 5%;
   background: var(--main-bg);
+  /* Ensures the background covers at least the full viewport height */
   min-height: 100vh;
+  /* Centering the form card within the container */
   display: flex;
   justify-content: center;
 }
 
+/* --- 2. Glassmorphism Edit Form Card --- */
 .edit-form {
   max-width: 800px;
   width: 100%;
   padding: 40px;
+  /* Semi-transparent dark background */
   background: rgba(22, 27, 34, 0.7);
+  /* Frosted glass effect for high-end UI feel */
   backdrop-filter: blur(15px);
   border-radius: 25px;
+  /* Subtle border to separate the card from the main background */
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* --- 3. Image Upload & Preview Section --- */
 .image-upload-section {
   text-align: center;
   margin-bottom: 30px;
@@ -25,12 +34,15 @@
   width: 200px;
   height: 150px;
   border-radius: 15px;
+  /* Maintains aspect ratio while filling the dimensions */
   object-fit: cover;
+  /* Dashed border to indicate a drop-zone or interactive area */
   border: 2px dashed var(--primary);
   margin-bottom: 15px;
 }
 
 .file-label {
+  /* Uses a transparent tint of the primary color for a modern look */
   background: rgba(var(--primary-rgb), 0.1);
   color: var(--primary);
   padding: 8px 20px;
@@ -39,13 +51,16 @@
   border: 1px solid var(--primary);
 }
 
+/* --- 4. Form Grid Layout --- */
 .form-grid {
+  /* Creates a two-column responsive layout */
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
 .full-width {
+  /* Forces specific fields (like Description) to take up both columns */
   grid-column: span 2;
 }
 
@@ -56,17 +71,44 @@
   font-size: 0.9rem;
 }
 
+/* --- 5. General Input Fields Styling --- */
 .input-group input,
 .input-group select,
 .input-group textarea {
   width: 100%;
   padding: 12px;
+  /* Consistent dark input background */
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   color: #fff;
 }
 
+/* --- 6. Select Dropdown Specifics --- */
+.input-group select {
+  cursor: pointer;
+  /* Remove default browser arrow icon for custom styling */
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+/* Styling the Dropdown List Options (fixing the 'White Background' issue) */
+.input-group select option {
+  /* Match the dropdown list background to the site theme */
+  background-color: #161b22;
+  /* Ensure option text is readable against dark background */
+  color: #fff;
+  padding: 10px;
+}
+
+.input-group select:focus {
+  outline: none;
+  /* Highlight field on focus using primary brand color */
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* --- 7. Action Buttons (Save/Cancel) --- */
 .form-actions {
   display: flex;
   gap: 15px;
@@ -74,6 +116,7 @@
 }
 
 .save-btn {
+  /* Save button takes up more space (flex ratio 2:1) */
   flex: 2;
   background: var(--primary);
   color: #fff;
@@ -83,38 +126,15 @@
   cursor: pointer;
   font-weight: bold;
 }
+
 .cancel-btn {
+  /* Secondary action takes up less space */
   flex: 1;
   background: transparent;
+  /* Red border to indicate destructive or 'go back' action */
   border: 1px solid #ff4757;
   color: #ff4757;
   padding: 12px;
   border-radius: 10px;
   cursor: pointer;
-}
-/* تنسيق حقل الاختيار نفسه */
-.input-group select {
-  width: 100%;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.05); /* نفس شفافية باقي الحقول */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  color: #fff; /* لون الكتابة أبيض */
-  cursor: pointer;
-  appearance: none; /* بيشيل السهم الافتراضي بتاع المتصفح لو حابب */
-  -webkit-appearance: none;
-}
-
-/* أهم جزء: تنسيق قائمة الاختيارات (اللي كانت بتظهر بيضاء) */
-.input-group select option {
-  background-color: #161b22; /* لون غامق يmatch الخلفية بتاعتك */
-  color: #fff; /* لون الخط جوه الاختيارات */
-  padding: 10px;
-}
-
-/* تحسين شكل الحقل لما نضغط عليه */
-.input-group select:focus {
-  outline: none;
-  border-color: var(--primary);
-  background: rgba(255, 255, 255, 0.1);
 }
