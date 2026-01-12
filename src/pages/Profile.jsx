@@ -28,8 +28,12 @@ const Profile = () => {
   const formatAvatarUrl = (path) => {
     if (!path) return "/default-avatar.png";
     if (path.startsWith("http")) return path;
+
+    // استخراج اسم الملف فقط (بيمسح أي مسارات قديمة أو كلمة uploads كانت متخزنة غلط)
     const fileName = path.split(/[\\/]/).pop();
-    const timestamp = new Date().getTime(); // Prevent image caching issues
+
+    const timestamp = new Date().getTime();
+    // الرابط لازم يبدأ بـ /uploads/ واسم الملف
     return `http://localhost:5000/uploads/${fileName}?t=${timestamp}`;
   };
 
@@ -66,28 +70,25 @@ const Profile = () => {
       });
 
       if (data.success) {
-        // Sync LocalStorage while preserving the existing token
+        // 1. تحديث الـ LocalStorage فوراً
         const updatedUserInfo = {
-          token: storedData?.token,
-          user: data.user, // Store the fresh user object
+          token: storedData?.token, // حافظ على التوكن القديم
+          user: data.user, // خد بيانات المستخدم الجديدة اللي راجعة من السيرفر
         };
-
         localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
 
-        // Immediate UI feedback for avatar
-        setPreview(formatAvatarUrl(data.user.avatar));
+        // 2. تحديث الـ State بتاع الصفحة عشان الصورة تتغير قدام عينك
+        setName(data.user.name);
+        setEmail(data.user.email);
+        setPreview(formatAvatarUrl(data.user.avatar)); // دي أهم خطوة
+
         toast.success("تم تحديث الملف الشخصي بنجاح ✨");
 
-        /**
-         * Trigger a global storage event to notify other components
-         * (like Navbar) that user info has changed.
-         */
+        // 3. إبلاغ المكونات التانية (زي الـ Navbar)
         window.dispatchEvent(new Event("storage"));
 
-        // Slight delay before reload to ensure user sees the success message
-        setTimeout(() => {
-          window.location.reload();
-        }, 800);
+        // اختياري: لو عايز تعمل ريلود خليه بعد فترة أطول شوية أو بلاش منه خالص
+        // setTimeout(() => window.location.reload(), 1000);
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "فشل تحديث البيانات");
