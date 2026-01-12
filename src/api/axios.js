@@ -1,16 +1,18 @@
 import axios from "axios";
 
+// Create Axios instance with local development URL
 const API = axios.create({
-  // تأكد أن VITE_API_URL في Vercel تنتهي بـ /api بدون علامة استفهام
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
+  baseURL: "http://localhost:5000/api",
 });
 
+// Request Interceptor to attach the token
 API.interceptors.request.use(
   (req) => {
-    // الأفضل تجيب التوكن المباشر اللي خزنته في صفحة الـ Login
+    // Get token from localStorage
     const token = localStorage.getItem("token");
 
     if (token) {
+      // Set the Authorization header
       req.headers.Authorization = `Bearer ${token}`;
     }
     return req;
