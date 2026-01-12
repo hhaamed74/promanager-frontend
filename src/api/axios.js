@@ -1,14 +1,19 @@
 import axios from "axios";
 
+/**
+ * إعداد Axios للعمل محلياً
+ * سيتم استخدام localhost:5000 كمرجع أساسي
+ */
 const API = axios.create({
-  // تأكد أن الرابط في Vercel هو: https://your-backend.vercel.app/api
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
+  // في الوضع المحلي، نستخدم الرابط المباشر للسيرفر
+  baseURL: "http://localhost:5000/api",
 });
 
-// 1. إنترسبتور الطلبات (لإرسال التوكن)
+// Interceptor لإرسال التوكن مع كل طلب
 API.interceptors.request.use(
   (req) => {
     const token = localStorage.getItem("token");
+
     if (token) {
       req.headers.Authorization = `Bearer ${token}`;
     }
@@ -19,16 +24,16 @@ API.interceptors.request.use(
   }
 );
 
-// 2. إنترسبتور الاستجابة (لمعالجة الأخطاء الشائعة)
+// Interceptor إضافي (اختياري) للتعامل مع انتهاء صلاحية التوكن
 API.interceptors.response.use(
   (response) => response,
   (error) => {
-    // إذا انتهت صلاحية التوكن أو كان غير صالح (401)
+    // إذا كان السيرفر يرد بـ 401 (غير مصرح به)، غالباً التوكن انتهى أو تالف
     if (error.response && error.response.status === 401) {
-      localStorage.clear(); // مسح البيانات القديمة
-      if (!window.location.pathname.includes("/login")) {
-        window.location.href = "/login"; // تحويله للدخول
-      }
+      localStorage.removeItem("token");
+      localStorage.removeItem("userInfo");
+      // يمكنك هنا توجيه المستخدم لصفحة تسجيل الدخول إذا أردت
+      // window.location.href = "/login";
     }
     return Promise.reject(error);
   }

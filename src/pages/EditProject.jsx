@@ -11,7 +11,7 @@ const EditProject = () => {
   const [loading, setLoading] = useState(true);
   const [imagePreview, setImagePreview] = useState(null);
   const [file, setFile] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false); // لمنع التكرار
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -37,15 +37,16 @@ const EditProject = () => {
             category: p.category,
           });
 
-          // تعديل: استخدام رابط الصورة القادم من Cloudinary مباشرة
+          // تعديل محلي: معالجة رابط الصورة القادم من السيرفر المحلي
           if (p.image) {
-            setImagePreview(p.image); // p.image هو الآن رابط كامل يبدأ بـ https
+            const fileName = p.image.split(/[\\/]/).pop();
+            setImagePreview(`http://localhost:5000/uploads/${fileName}`);
           }
         }
         setLoading(false);
         // eslint-disable-next-line no-unused-vars
       } catch (err) {
-        toast.error("خطأ في جلب بيانات المشروع");
+        toast.error("خطأ في جلب بيانات المشروع من السيرفر المحلي");
         navigate("/my-projects");
       }
     };
@@ -56,6 +57,7 @@ const EditProject = () => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
+      // إنشاء رابط معاينة مؤقت للصورة الجديدة المختارة
       setImagePreview(URL.createObjectURL(selectedFile));
     }
   };
@@ -69,22 +71,26 @@ const EditProject = () => {
       data.append(key, formData[key]);
     });
 
+    // إضافة الملف الجديد إذا تم اختياره
     if (file) data.append("image", file);
 
     try {
       await API.put(`/projects/${id}`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      toast.success("تم تحديث المشروع بنجاح 🚀");
-      navigate(`/my-projects`); // أو الصفحة التي تفضلها
+      toast.success("تم التحديث محلياً بنجاح! 🚀");
+      navigate(`/my-projects`);
     } catch (err) {
-      toast.error(err.response?.data?.message || "فشل التحديث");
+      toast.error(
+        err.response?.data?.message || "فشل التحديث على السيرفر المحلي"
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (loading) return <div className="loader">جاري تحميل البيانات...</div>;
+  if (loading)
+    return <div className="loader">جاري تحميل بيانات المشروع...</div>;
 
   return (
     <div className="edit-container">
@@ -96,19 +102,16 @@ const EditProject = () => {
         <div className="image-upload-section">
           <div className="preview-container">
             <img
-              src={
-                imagePreview ||
-                "https://via.placeholder.com/300x200?text=No+Image"
-              }
+              src={imagePreview || "https://placehold.co/300x200?text=No+Image"}
               alt="Preview"
               onError={(e) => {
                 e.target.src =
-                  "https://via.placeholder.com/300x200?text=Error+Loading+Image";
+                  "https://placehold.co/300x200?text=Error+Loading";
               }}
             />
           </div>
           <label htmlFor="file-input" className="file-label">
-            {file ? "✅ تم اختيار صورة جديدة" : "تغيير صورة المشروع"}
+            {file ? "✅ صورة جديدة جاهزة" : "تغيير الصورة (Local)"}
           </label>
           <input
             id="file-input"
@@ -207,10 +210,10 @@ const EditProject = () => {
             className="cancel-btn"
             onClick={() => navigate(-1)}
           >
-            إلغاء
+            تراجع
           </button>
           <button type="submit" className="save-btn" disabled={isSubmitting}>
-            {isSubmitting ? "جاري الحفظ..." : "حفظ التغييرات"}
+            {isSubmitting ? "جاري الحفظ..." : "حفظ التعديلات"}
           </button>
         </div>
       </form>

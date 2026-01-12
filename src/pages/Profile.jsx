@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import API from "../api/axios";
 import { toast } from "react-toastify";
 import "../css/Profile.css";
 import useTitle from "../hooks/useTitle";
 
 const Profile = () => {
-  useTitle("الملف الشخصي");
+  useTitle("الملف الشخصي 👤");
 
   // 1. استرجاع البيانات من LocalStorage
   const storedData = JSON.parse(localStorage.getItem("userInfo"));
@@ -18,21 +18,23 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
 
   /**
-   * دالة معالجة رابط الصورة
-   * تدعم روابط Cloudinary السحابية مباشرة
+   * دالة معالجة رابط الصورة الشخصية (وضع محلي)
    */
   const formatAvatarUrl = (path) => {
     if (!path) return "/default-avatar.png";
-    // إذا كان الرابط كاملاً (Cloudinary) نستخدمه كما هو
-    if (path.startsWith("http")) return path;
-    // احتياطي للمسارات القديمة
-    return "/default-avatar.png";
+
+    // إذا كان الرابط خارجياً (مثل UI Avatars)
+    if (path.startsWith("http") && !path.includes("localhost")) return path;
+
+    // استخراج اسم الملف وربطه بالسيرفر المحلي
+    const fileName = path.split(/[\\/]/).pop();
+    return `http://localhost:5000/uploads/${fileName}`;
   };
 
   const [preview, setPreview] = useState(formatAvatarUrl(initialUser?.avatar));
 
   /**
-   * جلب إحصائيات عدد مشاريع المستخدم
+   * جلب إحصائيات المستخدم
    */
   useEffect(() => {
     const fetchMyStats = async () => {
@@ -47,7 +49,7 @@ const Profile = () => {
   }, []);
 
   /**
-   * تحديث بيانات الملف الشخصي
+   * تحديث بيانات الملف الشخصي على السيرفر المحلي
    */
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -64,21 +66,21 @@ const Profile = () => {
       });
 
       if (data.success) {
-        // تحديث التخزين المحلي بالبيانات الجديدة (التي تحتوي على رابط Cloudinary)
+        // تحديث التخزين المحلي بالبيانات المرجعة من السيرفر المحلي
         const updatedUserInfo = {
-          token: storedData?.token,
+          token: storedData?.token, // الحفاظ على التوكن القديم
           user: data.user,
         };
         localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
 
-        // تحديث الواجهة
+        // تحديث حالة الواجهة
         setName(data.user.name);
         setEmail(data.user.email);
         setPreview(formatAvatarUrl(data.user.avatar));
 
-        toast.success("تم تحديث الملف الشخصي بنجاح ✨");
+        toast.success("تم تحديث بياناتك محلياً بنجاح ✨");
 
-        // إبلاغ الـ Navbar وبقية المكونات بالتغيير
+        // تنبيه بقية المكونات (مثل Navbar) لتحديث الصورة والاسم فوراً
         window.dispatchEvent(new Event("storage"));
       }
     } catch (err) {
@@ -105,8 +107,8 @@ const Profile = () => {
           </div>
           <div className="profile-tips">
             <p>
-              <i className="fas fa-lightbulb"></i> نصيحة: الصورة الشخصية الواضحة
-              تزيد من موثوقية مشاريعك.
+              <i className="fas fa-lightbulb"></i> نصيحة: استخدام صورة حقيقية
+              يزيد من احترافية ملفك.
             </p>
           </div>
         </div>
@@ -179,7 +181,7 @@ const Profile = () => {
 
           <button type="submit" className="save-btn" disabled={loading}>
             <i className="fas fa-check-circle"></i>
-            {loading ? " جاري الحفظ..." : " حفظ التغييرات"}
+            {loading ? " جاري الحفظ محلياً..." : " حفظ التغييرات"}
           </button>
         </form>
       </div>

@@ -7,6 +7,7 @@ import useTitle from "../hooks/useTitle";
 
 /**
  * MyProjects Component
+ * عرض وإدارة المشاريع الخاصة بالمستخدم المسجل حالياً
  */
 const MyProjects = () => {
   useTitle("مشاريعي الخاصة 👤");
@@ -23,7 +24,7 @@ const MyProjects = () => {
         }
         // eslint-disable-next-line no-unused-vars
       } catch (err) {
-        toast.error("فشل تحميل مشاريعك");
+        toast.error("فشل تحميل مشاريعك الخاصة");
       } finally {
         setLoading(false);
       }
@@ -39,23 +40,16 @@ const MyProjects = () => {
         toast.success("تم الحذف بنجاح");
         // eslint-disable-next-line no-unused-vars
       } catch (err) {
-        toast.error("حدث خطأ أثناء الحذف");
+        toast.error("حدث خطأ أثناء محاولة الحذف");
       }
     }
   };
 
-  /**
-   * دالة معالجة الروابط المحدثة
-   * تتعامل مع روابط Cloudinary مباشرة
-   */
   const getImageUrl = (imagePath) => {
     if (!imagePath) return "https://placehold.co/400x300?text=No+Image";
-
-    // إذا كان الرابط يبدأ بـ http (سحابي) نستخدمه كما هو
     if (imagePath.startsWith("http")) return imagePath;
-
-    // احتياطي للتعامل مع أي مسارات قديمة مخزنة محلياً (إن وجدت)
-    return "https://placehold.co/400x300?text=Old+Path+Error";
+    const fileName = imagePath.split(/[\\/]/).pop();
+    return `http://localhost:5000/uploads/${fileName}`;
   };
 
   if (loading) return <div className="loader">جاري تحميل مشاريعك...</div>;
@@ -66,26 +60,57 @@ const MyProjects = () => {
         <h2>
           مشاريعي <span>الخاصة</span>
         </h2>
-        <p>هنا يمكنك إدارة وتعديل مشاريعك التي قمت برفعها</p>
+        <p>إدارة وتحرير المشاريع التي قمت بنشرها</p>
       </div>
 
       <div className="projects-grid">
         {projects.length > 0 ? (
           projects.map((project) => (
-            <div className="project-card" key={project._id}>
+            <div className="project-card animate-fade-in" key={project._id}>
+              {/* قسم الصورة والحالة */}
               <div className="card-image">
                 <img
                   src={getImageUrl(project.image)}
                   alt={project.title}
-                  loading="lazy" // تحسين الأداء
+                  loading="lazy"
                   onError={(e) => {
                     e.target.src =
-                      "https://placehold.co/400x300?text=Image+Error";
+                      "https://placehold.co/400x300?text=Image+Not+Found";
                   }}
                 />
+                <span
+                  className={`status-badge ${
+                    project.status === "مكتمل" ? "completed" : "pending"
+                  }`}
+                >
+                  {project.status || "قيد التنفيذ"}
+                </span>
               </div>
+
+              {/* محتوى الكارت */}
               <div className="card-body">
+                <div className="card-meta">
+                  <span className={`priority-tag ${project.priority}`}>
+                    {project.priority || "متوسطة"}
+                  </span>
+                  <span className="category-text">{project.category}</span>
+                </div>
+
                 <h3>{project.title}</h3>
+                <p className="description-text">{project.description}</p>
+
+                {/* تاريخ الانتهاء */}
+                <div className="card-footer">
+                  <div className="deadline-info">
+                    <i className="far fa-calendar-alt"></i>
+                    <span>
+                      ينتهي في:{" "}
+                      {new Date(project.deadline).toLocaleDateString("ar-EG")}
+                    </span>
+                  </div>
+                </div>
+
+                {/* أزرار التحكم */}
                 <div className="card-actions">
                   <Link
                     to={`/edit-project/${project._id}`}
@@ -106,7 +131,15 @@ const MyProjects = () => {
         ) : (
           <div className="no-projects">
             <p>لم تقم بإضافة أي مشاريع بعد.</p>
-            <Link to="/add-project" className="main-btn">
+            <Link
+              to="/add-project"
+              className="tag-btn active"
+              style={{
+                textDecoration: "none",
+                marginTop: "20px",
+                display: "inline-block",
+              }}
+            >
               أضف مشروعك الأول الآن
             </Link>
           </div>

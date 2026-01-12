@@ -1,12 +1,13 @@
 import { useState } from "react";
 import API from "../api/axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom"; // أضفنا هذا للتوجيه بعد النجاح
+import { useNavigate } from "react-router-dom";
 import "../css/Auth.css";
 import useTitle from "../hooks/useTitle";
 
 /**
  * AddProject Component
+ * لرفع المشاريع وحفظها في مجلد uploads المحلي
  */
 const AddProject = () => {
   useTitle("إضافة مشروع جديد ➕");
@@ -18,10 +19,10 @@ const AddProject = () => {
   const [deadline, setDeadline] = useState("");
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [loading, setLoading] = useState(false); // لحماية الزر من الضغط المتكرر
+  const [loading, setLoading] = useState(false);
 
   /**
-   * معالجة اختيار الصورة وعرض المعاينة
+   * معالجة اختيار الصورة وعرض المعاينة الفورية
    */
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -32,12 +33,12 @@ const AddProject = () => {
   };
 
   /**
-   * إرسال البيانات
+   * إرسال البيانات إلى السيرفر المحلي
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!deadline) return toast.error("يا فنان لازم تحدد موعد انتهاء للمشروع!");
+    if (!deadline) return toast.error("برجاء تحديد موعد انتهاء للمشروع");
 
     setLoading(true);
     const formData = new FormData();
@@ -47,21 +48,21 @@ const AddProject = () => {
     if (image) formData.append("image", image);
 
     try {
-      // POST request
+      // إرسال الطلب للسيرفر المحلي
       await API.post("/projects", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      toast.success("المشروع اتضاف والديدلاين اتحدد! 🚀");
+      toast.success("تمت إضافة المشروع بنجاح 🚀");
 
-      // توجيه المستخدم لصفحة مشاريعي بعد ثانية واحدة
+      // التوجيه لصفحة المشاريع
       setTimeout(() => {
         navigate("/my-projects");
       }, 1500);
     } catch (err) {
       console.error(err.response?.data);
       toast.error(
-        err.response?.data?.message || "مشكلة في الرفع، تأكد من حجم الصورة"
+        err.response?.data?.message || "حدث خطأ أثناء رفع البيانات، حاول مجدداً"
       );
     } finally {
       setLoading(false);
@@ -70,10 +71,10 @@ const AddProject = () => {
 
   return (
     <div className="auth-container">
-      <div className="auth-card project-card">
+      <div className="auth-card project-card animate-fade-in">
         <div className="auth-header">
-          <h2>إضافة إبداع جديد 📁</h2>
-          <p>املاً البيانات وحدد موعد التسليم</p>
+          <h2>إضافة مشروع جديد 📁</h2>
+          <p>أدخل بيانات المشروع وصورة المعاينة</p>
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
@@ -89,7 +90,7 @@ const AddProject = () => {
 
           <div className="input-group">
             <textarea
-              placeholder="وصف المشروع..."
+              placeholder="اكتب وصفاً مختصراً للمشروع..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
@@ -98,15 +99,7 @@ const AddProject = () => {
           </div>
 
           <div className="input-group">
-            <label
-              style={{
-                display: "block",
-                marginBottom: "8px",
-                color: "var(--text-muted)",
-              }}
-            >
-              تاريخ التسليم (Deadline):
-            </label>
+            <label className="date-label">تاريخ التسليم المتوقع:</label>
             <input
               type="date"
               value={deadline}
@@ -118,13 +111,12 @@ const AddProject = () => {
           <div className="file-input-wrapper">
             <label className="file-label">
               <span>
-                {image ? "✅ تم اختيار الصورة" : "📸 ارفع صورة المشروع"}
+                {image ? "✅ تم اختيار الصورة" : "📸 اختر صورة للمشروع"}
               </span>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                required // اختياري حسب رغبتك
               />
             </label>
             {preview && (
@@ -135,7 +127,7 @@ const AddProject = () => {
           </div>
 
           <button type="submit" className="auth-btn" disabled={loading}>
-            {loading ? "جاري الرفع لـ Cloudinary..." : "نشر المشروع الآن"}
+            {loading ? "جاري الحفظ..." : "حفظ المشروع"}
           </button>
         </form>
       </div>

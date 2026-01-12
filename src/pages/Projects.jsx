@@ -7,9 +7,10 @@ import useTitle from "../hooks/useTitle";
 
 /**
  * Projects Component
+ * عرض كافة المشاريع المتاحة على السيرفر المحلي
  */
 const Projects = () => {
-  useTitle("المشاريع");
+  useTitle("المشاريع 📂");
 
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +18,9 @@ const Projects = () => {
   const [filterCategory, setFilterCategory] = useState("الكل");
 
   /**
-   * تحديث دالة تنسيق الروابط لدعم Cloudinary
+   * تنسيق روابط الصور للعمل مع localhost:5000
+   * @param {string} path - المسار المخزن في قاعدة البيانات
+   * @param {boolean} isAvatar - هل الصورة هي أفاتار مستخدم؟
    */
   const formatImageUrl = (path, isAvatar = false) => {
     if (!path) {
@@ -26,13 +29,12 @@ const Projects = () => {
         : "https://placehold.co/400x300?text=No+Image";
     }
 
-    // إذا كان الرابط يبدأ بـ http، فهو رابط سحابي مباشر
-    if (path.startsWith("http")) return path;
+    // إذا كان الرابط خارجياً (مثل UI Avatars)
+    if (path.startsWith("http") && !path.includes("localhost")) return path;
 
-    // احتياطي للمسارات المحلية القديمة (في حال وجودها)
-    return isAvatar
-      ? "/default-avatar.png"
-      : "https://placehold.co/400x300?text=Path+Error";
+    // استخراج اسم الملف للربط مع السيرفر المحلي
+    const fileName = path.split(/[\\/]/).pop();
+    return `http://localhost:5000/uploads/${fileName}`;
   };
 
   useEffect(() => {
@@ -43,8 +45,8 @@ const Projects = () => {
           setProjects(response.data.data);
         }
       } catch (err) {
-        console.error("Error fetching projects:", err);
-        toast.error("فشل تحميل المشاريع");
+        console.error("Local Server Error:", err);
+        toast.error("فشل جلب المشاريع من السيرفر المحلي");
       } finally {
         setLoading(false);
       }
@@ -68,7 +70,7 @@ const Projects = () => {
         const response = await API.delete(`/projects/${id}`);
         if (response.data.success) {
           setProjects(projects.filter((project) => project._id !== id));
-          toast.success("تم حذف المشروع بنجاح");
+          toast.success("تم الحذف بنجاح من السيرفر");
         }
         // eslint-disable-next-line no-unused-vars
       } catch (err) {
@@ -77,7 +79,8 @@ const Projects = () => {
     }
   };
 
-  if (loading) return <div className="loader">جاري تحميل المشاريع...</div>;
+  if (loading)
+    return <div className="loader">جاري الاتصال بالسيرفر المحلي...</div>;
 
   return (
     <div className="projects-container">
@@ -85,7 +88,7 @@ const Projects = () => {
         <h2>
           معرض <span>المشاريع</span>
         </h2>
-        <p>استعرض قائمة بآخر إنجازاتك وإبداعاتك المرفوعة</p>
+        <p>استكشف الإبداعات المخزنة محلياً على نظامك</p>
       </div>
 
       <div className="filter-wrapper card-glass">
@@ -93,7 +96,7 @@ const Projects = () => {
           <i className="fas fa-search"></i>
           <input
             type="text"
-            placeholder="ابحث بالعنوان أو الوصف..."
+            placeholder="بحث..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -139,7 +142,7 @@ const Projects = () => {
                 <div className="project-user-info">
                   <img
                     src={formatImageUrl(project.user?.avatar, true)}
-                    alt="user-avatar"
+                    alt="avatar"
                     className="user-small-avatar"
                     onError={(e) => {
                       e.target.src = "/default-avatar.png";
@@ -187,7 +190,7 @@ const Projects = () => {
           ))
         ) : (
           <div className="no-projects">
-            <p>لا توجد مشاريع تطابق بحثك حالياً.. 🔍</p>
+            <p>لا توجد نتائج مطابقة لبحثك.. 🔍</p>
           </div>
         )}
       </div>

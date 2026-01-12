@@ -1,3 +1,8 @@
+:root {
+  --primary: #3b82f6;
+  --main-bg: #0f172a;
+  --text-muted: #94a3b8;
+}
 /* --- 1. Main Projects Container --- */
 .projects-container {
   /* Dynamic padding for breathing room around the grid */
@@ -123,20 +128,21 @@
 }
 
 /* Priority color coding */
+/* أضف هذه الكلاسات لملف CSS لضمان الدعم */
+.priority-tag.high,
 .priority-tag.عالية {
-  /* High */
   background: rgba(255, 71, 87, 0.2);
   color: #ff4757;
   border: 1px solid rgba(255, 71, 87, 0.3);
 }
+.priority-tag.medium,
 .priority-tag.متوسطة {
-  /* Medium */
   background: rgba(255, 165, 0, 0.2);
   color: #ffa500;
   border: 1px solid rgba(255, 165, 0, 0.3);
 }
+.priority-tag.low,
 .priority-tag.منخفضة {
-  /* Low */
   background: rgba(46, 213, 115, 0.2);
   color: #2ed573;
   border: 1px solid rgba(46, 213, 115, 0.3);
@@ -283,4 +289,27 @@
     padding: 15px;
     margin: 10px;
   }
+}
+.project-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+
+.user-small-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--primary);
+}
+
+.user-name-text {
+  font-size: 0.8rem;
+  color: #e2e8f0;
+  font-weight: 500;
 }

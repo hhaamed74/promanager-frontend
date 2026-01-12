@@ -104,7 +104,7 @@ const Home = () => {
                 إضافة مشروع جديد
               </Link>
               {/* تأكد أن المسار يطابق MyProjects في App.js */}
-              <Link to="/my-projects" className="outline-btn">
+              <Link to="/projects" className="outline-btn">
                 عرض مشروعاتي
               </Link>
             </div>

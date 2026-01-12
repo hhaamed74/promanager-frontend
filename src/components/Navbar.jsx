@@ -12,17 +12,53 @@ const Navbar = () => {
   const [showNotif, setShowNotif] = useState(false);
   const notifRef = useRef(null);
 
-  // جلب الإشعارات للأدمن
+  // 1. دالة جلب الإشعارات وفلترتها
   const fetchNotifications = useCallback(async () => {
     try {
       const res = await API.get("/auth/activities");
-      setNotifications(res.data.data);
+      const allNotifs = res.data.data || [];
+
+      // نجلب قائمة الـ IDs التي قام المستخدم بمسحها سابقاً
+      const clearedIds = JSON.parse(
+        localStorage.getItem("clearedNotifIds") || "[]"
+      );
+
+      // نقوم بتصفية الإشعارات: نظهر فقط التي لم يسبق مسحها
+      const visibleNotifs = allNotifs.filter((n) => {
+        const id = String(n._id || n.id || "");
+        return !clearedIds.includes(id);
+      });
+
+      setNotifications(visibleNotifs);
     } catch (error) {
       console.error("Failed to fetch notifications", error);
     }
   }, []);
 
-  // جلب وتحديث بيانات المستخدم من التخزين المحلي
+  // 2. دالة مسح الإشعارات (إضافتها للقائمة السوداء محلياً)
+  const handleClearNotifications = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    // استخراج الـ IDs من الإشعارات الظاهرة حالياً فقط
+    const idsToHide = notifications.map((n) => String(n._id || n.id || ""));
+
+    const alreadyCleared = JSON.parse(
+      localStorage.getItem("clearedNotifIds") || "[]"
+    );
+
+    // دمج الـ IDs الجديدة مع القديمة بدون تكرار
+    const updatedCleared = [...new Set([...alreadyCleared, ...idsToHide])];
+
+    localStorage.setItem("clearedNotifIds", JSON.stringify(updatedCleared));
+
+    // تفريغ القائمة من الواجهة فوراً
+    setNotifications([]);
+  };
+
+  // 3. دالة جلب بيانات المستخدم من التخزين
   const fetchUserFromStorage = useCallback(() => {
     const userInfo = localStorage.getItem("userInfo");
     if (userInfo) {
@@ -30,7 +66,7 @@ const Navbar = () => {
         const parsedData = JSON.parse(userInfo);
         const userData = parsedData.user || parsedData;
         setUser(userData);
-
+        // إذا كان المستخدم أدمن، نجلب إشعاراته
         if (userData.role === "admin") {
           fetchNotifications();
         }
@@ -42,15 +78,16 @@ const Navbar = () => {
     }
   }, [fetchNotifications]);
 
+  // 4. مراقبة التغييرات (تغيير الصفحة، النقر خارج القائمة، التحديث)
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchUserFromStorage();
 
-    // التحديث عند تغيير التخزين (من صفحات أخرى)
+    // تحديث عند تغيير المسار أو التخزين
     const handleStorageChange = () => fetchUserFromStorage();
     window.addEventListener("storage", handleStorageChange);
 
-    // إغلاق قائمة الإشعارات عند الضغط خارجها
+    // إغلاق القائمة عند النقر خارجها
     const handleClickOutside = (event) => {
       if (notifRef.current && !notifRef.current.contains(event.target)) {
         setShowNotif(false);
@@ -70,6 +107,14 @@ const Navbar = () => {
     setUser(null);
     navigate("/login");
     setIsMenuOpen(false);
+  };
+
+  const getLocalAvatar = (avatarPath) => {
+    if (!avatarPath)
+      return `https://ui-avatars.com/api/?name=${user?.name || "User"}`;
+    if (avatarPath.startsWith("http")) return avatarPath;
+    const fileName = avatarPath.split(/[\\/]/).pop();
+    return `http://localhost:5000/uploads/${fileName}`;
   };
 
   return (
@@ -114,20 +159,74 @@ const Navbar = () => {
                       </span>
                     )}
                   </div>
-                  {/* هنا يمكن إضافة Dropdown الإشعارات إذا أردت */}
+
+                  {showNotif && (
+                    <div className="notif-dropdown">
+                      <div className="notif-header">
+                        <span>الإشعارات ({notifications.length})</span>
+                        {notifications.length > 0 && (
+                          <button
+                            className="clear-notif-btn"
+                            onClick={handleClearNotifications}
+                          >
+                            مسح الكل
+                          </button>
+                        )}
+                      </div>
+                      <div className="notif-list">
+                        {notifications.length > 0 ? (
+                          notifications.map((n, i) => (
+                            <div key={n._id || i} className="notif-item">
+                              <div
+                                className={`notif-icon ${
+                                  n.type === "project" ? "project" : "user"
+                                }`}
+                              >
+                                <i
+                                  className={
+                                    n.type === "project"
+                                      ? "fas fa-tasks"
+                                      : "fas fa-user"
+                                  }
+                                ></i>
+                              </div>
+                              <div className="notif-details">
+                                <p className="notif-message">
+                                  {n.message || "نشاط جديد في النظام"}
+                                </p>
+                                <span className="notif-time">
+                                  {n.createdAt
+                                    ? new Date(n.createdAt).toLocaleTimeString(
+                                        "ar-EG",
+                                        {
+                                          hour: "2-digit",
+                                          minute: "2-digit",
+                                        }
+                                      )
+                                    : "منذ قليل"}
+                                </span>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="notif-empty">
+                            لا توجد إشعارات جديدة
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
               {user.role === "admin" && (
                 <Link
                   to="/admin/dashboard"
-                  className="admin-dashboard-btn"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   لوحة التحكم
                 </Link>
               )}
-
               <Link to="/add-project" onClick={() => setIsMenuOpen(false)}>
                 إضافة مشروع
               </Link>
@@ -142,28 +241,15 @@ const Navbar = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <img
-                    src={
-                      user?.avatar?.startsWith("http")
-                        ? user.avatar
-                        : `https://ui-avatars.com/api/?name=${
-                            user?.name || "User"
-                          }`
-                    }
+                    src={getLocalAvatar(user?.avatar)}
                     alt="avatar"
                     className="nav-avatar"
-                    onError={(e) => {
-                      e.target.src = "https://via.placeholder.com/150";
-                    }}
                   />
                   <span className="nav-username">
                     {user?.name?.split(" ")[0]}
                   </span>
                 </Link>
-                <button
-                  onClick={handleLogout}
-                  className="logout-btn-icon"
-                  title="Logout"
-                >
+                <button onClick={handleLogout} className="logout-btn-icon">
                   <i className="fas fa-sign-out-alt"></i>
                 </button>
               </div>

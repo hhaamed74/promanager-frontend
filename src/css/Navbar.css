@@ -367,3 +367,18 @@
     margin-top: 10px;
   }
 }
+.clear-notif-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: 4px;
+  transition: 0.3s;
+}
+
+.clear-notif-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  text-decoration: underline;
+}

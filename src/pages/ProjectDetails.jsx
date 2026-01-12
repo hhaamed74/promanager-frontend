@@ -7,10 +7,10 @@ import useTitle from "../hooks/useTitle";
 
 /**
  * ProjectDetails Component
- * يعرض التفاصيل الكاملة لمشروع معين باستخدام الـ ID.
+ * يعرض التفاصيل الكاملة للمشروع مع جلب الصور من السيرفر المحلي
  */
 const ProjectDetails = () => {
-  useTitle("تفاصيل المشروع");
+  useTitle("تفاصيل المشروع 📄");
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -27,29 +27,38 @@ const ProjectDetails = () => {
         setLoading(false);
         // eslint-disable-next-line no-unused-vars
       } catch (err) {
-        toast.error("حدث خطأ في جلب بيانات المشروع");
+        toast.error("فشل في الوصول لبيانات المشروع");
         navigate("/projects");
       }
     };
     fetchProject();
   }, [id, navigate]);
 
-  // دالة ذكية للتعامل مع رابط الصورة
+  /**
+   * دالة معالجة الصورة للعرض المحلي
+   */
   const getFullImageUrl = (imagePath) => {
     if (!imagePath)
       return "https://placehold.co/800x400?text=No+Image+Available";
-    if (imagePath.startsWith("http")) return imagePath; // رابط Cloudinary جاهز
-    return "/default-project-image.jpg"; // احتياطي
+
+    // إذا كان رابطاً خارجياً
+    if (imagePath.startsWith("http") && !imagePath.includes("localhost"))
+      return imagePath;
+
+    // استخراج اسم الملف للربط مع مجلد الرفع المحلي
+    const fileName = imagePath.split(/[\\/]/).pop();
+    return `http://localhost:5000/uploads/${fileName}`;
   };
 
-  if (loading) return <div className="loader">جاري تحميل التفاصيل...</div>;
-  if (!project) return <div className="loader">المشروع غير موجود</div>;
+  if (loading) return <div className="loader">جاري فتح ملفات المشروع...</div>;
+  if (!project)
+    return <div className="loader">عذراً، لم يتم العثور على المشروع</div>;
 
   return (
     <div className="details-container">
       {/* زر الرجوع */}
       <button className="back-btn" onClick={() => navigate(-1)}>
-        ⬅ رجوع
+        <i className="fas fa-arrow-right"></i> العودة للخلف
       </button>
 
       <div className="details-card animate-fade-in">
@@ -59,7 +68,7 @@ const ProjectDetails = () => {
             alt={project.title}
             onError={(e) => {
               e.target.src =
-                "https://placehold.co/800x400?text=Error+Loading+Image";
+                "https://placehold.co/800x400?text=Image+Not+Found";
             }}
           />
         </div>
@@ -111,7 +120,7 @@ const ProjectDetails = () => {
               className="edit-btn"
               onClick={() => navigate(`/edit-project/${project._id}`)}
             >
-              تعديل البيانات
+              تعديل بيانات المشروع
             </button>
           </div>
         </div>

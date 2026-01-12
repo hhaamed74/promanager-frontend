@@ -46,15 +46,17 @@ const AdminDashboard = () => {
   }, []);
 
   /**
-   * تعديل: دالة معالجة الصورة الشخصية
-   * أصبحت ترجع الرابط كما هو لأنه رابط Cloudinary كامل
+   * دالة معالجة الصورة الشخصية (وضع محلي)
    */
   const formatAvatar = (avatarPath) => {
     if (!avatarPath) return "/default-avatar.png";
-    // إذا كان الرابط يبدأ بـ http (رابط سحابي) نستخدمه مباشرة
+
+    // إذا كان المسار يبدأ بـ http (رابط خارجي مثل UI-Avatars)
     if (avatarPath.startsWith("http")) return avatarPath;
-    // احتياطي لأي بيانات قديمة
-    return "/default-avatar.png";
+
+    // استخراج اسم الملف وربطه بالسيرفر المحلي
+    const fileName = avatarPath.split(/[\\/]/).pop();
+    return `http://localhost:5000/uploads/${fileName}`;
   };
 
   // بيانات الرسوم البيانية
@@ -155,7 +157,6 @@ const AdminDashboard = () => {
         <div className="charts-wrapper">
           <div className="chart-box card-glass">
             <h3>إحصائيات المنصة</h3>
-
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={barData}>
                 <CartesianGrid
@@ -187,7 +188,6 @@ const AdminDashboard = () => {
 
           <div className="chart-box card-glass">
             <h3>نسبة الإنجاز</h3>
-
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
