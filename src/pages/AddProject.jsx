@@ -1,42 +1,45 @@
 import { useState } from "react";
 import API from "../api/axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom"; // أضفنا هذا للتوجيه بعد النجاح
 import "../css/Auth.css";
 import useTitle from "../hooks/useTitle";
 
 /**
  * AddProject Component
- * Handles the creation of new projects including title, description, deadline, and image upload.
  */
 const AddProject = () => {
-  useTitle("إضافة مشروع جديد ➕"); // Set dynamic page title
+  useTitle("إضافة مشروع جديد ➕");
+  const navigate = useNavigate();
 
-  // State hooks for form inputs and image management
+  // State hooks
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [deadline, setDeadline] = useState(""); // Stores the project completion date
-  const [image, setImage] = useState(null); // Stores the actual file object
-  const [preview, setPreview] = useState(null); // Stores the local URL for image preview
+  const [deadline, setDeadline] = useState("");
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false); // لحماية الزر من الضغط المتكرر
 
   /**
-   * Handle image selection and generate a preview URL
+   * معالجة اختيار الصورة وعرض المعاينة
    */
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setImage(file);
-    if (file) setPreview(URL.createObjectURL(file));
+    if (file) {
+      setImage(file);
+      setPreview(URL.createObjectURL(file));
+    }
   };
 
   /**
-   * Submit form data to the server using FormData (required for file uploads)
+   * إرسال البيانات
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation for the deadline field
     if (!deadline) return toast.error("يا فنان لازم تحدد موعد انتهاء للمشروع!");
 
-    // Initialize FormData to handle multipart/form-data
+    setLoading(true);
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
@@ -44,16 +47,24 @@ const AddProject = () => {
     if (image) formData.append("image", image);
 
     try {
-      // POST request to the projects endpoint
+      // POST request
       await API.post("/projects", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
       toast.success("المشروع اتضاف والديدلاين اتحدد! 🚀");
 
-      // Optional: Reset form or navigate after success
+      // توجيه المستخدم لصفحة مشاريعي بعد ثانية واحدة
+      setTimeout(() => {
+        navigate("/my-projects");
+      }, 1500);
     } catch (err) {
       console.error(err.response?.data);
-      toast.error(err.response?.data?.message || "مشكلة في الرفع");
+      toast.error(
+        err.response?.data?.message || "مشكلة في الرفع، تأكد من حجم الصورة"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,27 +77,26 @@ const AddProject = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
-          {/* Project Title Input */}
           <div className="input-group">
             <input
               type="text"
               placeholder="عنوان المشروع"
+              value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
             />
           </div>
 
-          {/* Project Description Input */}
           <div className="input-group">
             <textarea
               placeholder="وصف المشروع..."
+              value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
               rows="3"
             />
           </div>
 
-          {/* Project Deadline Date Picker */}
           <div className="input-group">
             <label
               style={{
@@ -99,12 +109,12 @@ const AddProject = () => {
             </label>
             <input
               type="date"
+              value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
               required
             />
           </div>
 
-          {/* Custom File Upload Section */}
           <div className="file-input-wrapper">
             <label className="file-label">
               <span>
@@ -114,10 +124,9 @@ const AddProject = () => {
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                required
+                required // اختياري حسب رغبتك
               />
             </label>
-            {/* Real-time Image Preview */}
             {preview && (
               <div className="image-preview">
                 <img src={preview} alt="Preview" />
@@ -125,9 +134,8 @@ const AddProject = () => {
             )}
           </div>
 
-          {/* Submission Button */}
-          <button type="submit" className="auth-btn">
-            نشر المشروع الآن
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? "جاري الرفع لـ Cloudinary..." : "نشر المشروع الآن"}
           </button>
         </form>
       </div>

@@ -7,35 +7,34 @@ import useTitle from "../hooks/useTitle";
 
 /**
  * Projects Component
- * Displays a gallery of all projects with real-time search and category filtering capabilities.
  */
 const Projects = () => {
   useTitle("المشاريع");
 
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Search and Filter States
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("الكل");
 
   /**
-   * Helper to format image URLs for both project covers and user avatars
+   * تحديث دالة تنسيق الروابط لدعم Cloudinary
    */
   const formatImageUrl = (path, isAvatar = false) => {
-    if (!path)
+    if (!path) {
       return isAvatar
         ? "/default-avatar.png"
         : "https://placehold.co/400x300?text=No+Image";
+    }
 
+    // إذا كان الرابط يبدأ بـ http، فهو رابط سحابي مباشر
     if (path.startsWith("http")) return path;
-    const fileName = path.split(/[\\/]/).pop();
-    return `http://localhost:5000/uploads/${fileName}`;
+
+    // احتياطي للمسارات المحلية القديمة (في حال وجودها)
+    return isAvatar
+      ? "/default-avatar.png"
+      : "https://placehold.co/400x300?text=Path+Error";
   };
 
-  /**
-   * Fetch all projects on mount
-   */
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -53,9 +52,6 @@ const Projects = () => {
     fetchProjects();
   }, []);
 
-  /**
-   * Computed Property: Filters projects based on search input and selected category
-   */
   const filteredProjects = projects.filter((project) => {
     const matchesSearch =
       project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -66,9 +62,6 @@ const Projects = () => {
     return matchesSearch && matchesCategory;
   });
 
-  /**
-   * Delete handler with confirmation and state update
-   */
   const handleDelete = async (id) => {
     if (window.confirm("هل أنت متأكد من حذف هذا المشروع نهائياً؟")) {
       try {
@@ -95,7 +88,6 @@ const Projects = () => {
         <p>استعرض قائمة بآخر إنجازاتك وإبداعاتك المرفوعة</p>
       </div>
 
-      {/* Search and Filter Section */}
       <div className="filter-wrapper card-glass">
         <div className="search-bar">
           <i className="fas fa-search"></i>
@@ -120,18 +112,18 @@ const Projects = () => {
         </div>
       </div>
 
-      {/* Projects Grid */}
       <div className="projects-grid">
         {filteredProjects.length > 0 ? (
           filteredProjects.map((project) => (
-            <div className="project-card" key={project._id}>
+            <div className="project-card animate-fade-in" key={project._id}>
               <div className="card-image">
                 <img
                   src={formatImageUrl(project.image)}
                   alt={project.title}
+                  loading="lazy"
                   onError={(e) => {
                     e.target.src =
-                      "https://placehold.co/400x300?text=Error+Loading";
+                      "https://placehold.co/400x300?text=Image+Error";
                   }}
                 />
                 <span
@@ -144,7 +136,6 @@ const Projects = () => {
               </div>
 
               <div className="card-body">
-                {/* User Info Bar */}
                 <div className="project-user-info">
                   <img
                     src={formatImageUrl(project.user?.avatar, true)}
@@ -173,6 +164,7 @@ const Projects = () => {
                   <div className="deadline-info">
                     <i className="far fa-calendar-alt"></i>
                     <span>
+                      {" "}
                       ينتهي في:{" "}
                       {new Date(project.deadline).toLocaleDateString("ar-EG")}
                     </span>

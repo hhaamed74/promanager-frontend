@@ -4,15 +4,10 @@ import { toast } from "react-toastify";
 import "../css/Profile.css";
 import useTitle from "../hooks/useTitle";
 
-/**
- * Profile Component
- * Manages user account settings, allows profile updates (name, email, avatar),
- * and displays personal project statistics.
- */
 const Profile = () => {
   useTitle("الملف الشخصي");
 
-  // 1. Initialize data from LocalStorage
+  // 1. استرجاع البيانات من LocalStorage
   const storedData = JSON.parse(localStorage.getItem("userInfo"));
   const initialUser = storedData?.user || storedData;
 
@@ -20,27 +15,24 @@ const Profile = () => {
   const [email, setEmail] = useState(initialUser?.email || "");
   const [file, setFile] = useState(null);
   const [myProjectsCount, setMyProjectsCount] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   /**
-   * Helper: Formats the avatar URL and appends a timestamp to bypass browser caching
-   * @param {string} path - Server image path
+   * دالة معالجة رابط الصورة
+   * تدعم روابط Cloudinary السحابية مباشرة
    */
   const formatAvatarUrl = (path) => {
     if (!path) return "/default-avatar.png";
+    // إذا كان الرابط كاملاً (Cloudinary) نستخدمه كما هو
     if (path.startsWith("http")) return path;
-
-    // استخراج اسم الملف فقط (بيمسح أي مسارات قديمة أو كلمة uploads كانت متخزنة غلط)
-    const fileName = path.split(/[\\/]/).pop();
-
-    const timestamp = new Date().getTime();
-    // الرابط لازم يبدأ بـ /uploads/ واسم الملف
-    return `http://localhost:5000/uploads/${fileName}?t=${timestamp}`;
+    // احتياطي للمسارات القديمة
+    return "/default-avatar.png";
   };
 
   const [preview, setPreview] = useState(formatAvatarUrl(initialUser?.avatar));
 
   /**
-   * Fetch user statistics (e.g., project count) on mount
+   * جلب إحصائيات عدد مشاريع المستخدم
    */
   useEffect(() => {
     const fetchMyStats = async () => {
@@ -55,10 +47,12 @@ const Profile = () => {
   }, []);
 
   /**
-   * Handles profile update using FormData for multipart support
+   * تحديث بيانات الملف الشخصي
    */
   const handleUpdate = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     const formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
@@ -70,35 +64,34 @@ const Profile = () => {
       });
 
       if (data.success) {
-        // 1. تحديث الـ LocalStorage فوراً
+        // تحديث التخزين المحلي بالبيانات الجديدة (التي تحتوي على رابط Cloudinary)
         const updatedUserInfo = {
-          token: storedData?.token, // حافظ على التوكن القديم
-          user: data.user, // خد بيانات المستخدم الجديدة اللي راجعة من السيرفر
+          token: storedData?.token,
+          user: data.user,
         };
         localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
 
-        // 2. تحديث الـ State بتاع الصفحة عشان الصورة تتغير قدام عينك
+        // تحديث الواجهة
         setName(data.user.name);
         setEmail(data.user.email);
-        setPreview(formatAvatarUrl(data.user.avatar)); // دي أهم خطوة
+        setPreview(formatAvatarUrl(data.user.avatar));
 
         toast.success("تم تحديث الملف الشخصي بنجاح ✨");
 
-        // 3. إبلاغ المكونات التانية (زي الـ Navbar)
+        // إبلاغ الـ Navbar وبقية المكونات بالتغيير
         window.dispatchEvent(new Event("storage"));
-
-        // اختياري: لو عايز تعمل ريلود خليه بعد فترة أطول شوية أو بلاش منه خالص
-        // setTimeout(() => window.location.reload(), 1000);
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "فشل تحديث البيانات");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="profile-page-container">
       <div className="profile-grid">
-        {/* Left Card: Quick Stats & User Role */}
+        {/* الكارت الجانبي: الإحصائيات */}
         <div className="profile-side-card glass-morph animate-fade-in">
           <div className="stat-box">
             <i className="fas fa-project-diagram"></i>
@@ -118,7 +111,7 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Right Card: Edit Settings Form */}
+        {/* الكارت الرئيسي: نموذج التعديل */}
         <form
           className="profile-main-card glass-morph animate-fade-in"
           onSubmit={handleUpdate}
@@ -184,8 +177,9 @@ const Profile = () => {
             </div>
           </div>
 
-          <button type="submit" className="save-btn">
-            <i className="fas fa-check-circle"></i> حفظ التغييرات
+          <button type="submit" className="save-btn" disabled={loading}>
+            <i className="fas fa-check-circle"></i>
+            {loading ? " جاري الحفظ..." : " حفظ التغييرات"}
           </button>
         </form>
       </div>

@@ -7,19 +7,16 @@ import useTitle from "../hooks/useTitle";
 
 /**
  * ProjectDetails Component
- * Fetches and displays full information about a specific project using its ID from the URL.
+ * يعرض التفاصيل الكاملة لمشروع معين باستخدام الـ ID.
  */
 const ProjectDetails = () => {
   useTitle("تفاصيل المشروع");
 
-  const { id } = useParams(); // Retrieves the project ID from the route parameters
+  const { id } = useParams();
   const navigate = useNavigate();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  /**
-   * Fetches specific project data on component mount
-   */
   useEffect(() => {
     const fetchProject = async () => {
       try {
@@ -31,32 +28,39 @@ const ProjectDetails = () => {
         // eslint-disable-next-line no-unused-vars
       } catch (err) {
         toast.error("حدث خطأ في جلب بيانات المشروع");
-        navigate("/projects"); // Fallback to projects list if project not found
+        navigate("/projects");
       }
     };
     fetchProject();
   }, [id, navigate]);
+
+  // دالة ذكية للتعامل مع رابط الصورة
+  const getFullImageUrl = (imagePath) => {
+    if (!imagePath)
+      return "https://placehold.co/800x400?text=No+Image+Available";
+    if (imagePath.startsWith("http")) return imagePath; // رابط Cloudinary جاهز
+    return "/default-project-image.jpg"; // احتياطي
+  };
 
   if (loading) return <div className="loader">جاري تحميل التفاصيل...</div>;
   if (!project) return <div className="loader">المشروع غير موجود</div>;
 
   return (
     <div className="details-container">
-      {/* Navigation: Back button */}
+      {/* زر الرجوع */}
       <button className="back-btn" onClick={() => navigate(-1)}>
         ⬅ رجوع
       </button>
 
-      <div className="details-card">
-        {/* Project Visual Branding */}
+      <div className="details-card animate-fade-in">
         <div className="details-image">
           <img
-            src={
-              project.image
-                ? `http://localhost:5000/${project.image.replace(/\\/g, "/")}`
-                : "https://placehold.co/800x400?text=No+Image+Available"
-            }
+            src={getFullImageUrl(project.image)}
             alt={project.title}
+            onError={(e) => {
+              e.target.src =
+                "https://placehold.co/800x400?text=Error+Loading+Image";
+            }}
           />
         </div>
 
@@ -65,14 +69,15 @@ const ProjectDetails = () => {
             <h1>{project.title}</h1>
             <span
               className={`status-badge ${
-                project.status === "مكتمل" ? "completed" : "pending"
+                project.status === "مكتمل"
+                  ? "status-completed"
+                  : "status-pending"
               }`}
             >
               {project.status}
             </span>
           </div>
 
-          {/* Metadata Section */}
           <div className="details-meta">
             <div className="meta-item">
               <strong>الأولوية:</strong>
@@ -101,7 +106,6 @@ const ProjectDetails = () => {
             <p>{project.description}</p>
           </div>
 
-          {/* Action Footer */}
           <div className="details-actions">
             <button
               className="edit-btn"

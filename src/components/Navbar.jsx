@@ -3,14 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import API from "../api/axios";
 import "../css/Navbar.css";
 
-/**
- * Navbar Component
- * Handles navigation, user authentication state synchronization across tabs/components,
- * and manages admin notifications.
- */
 const Navbar = () => {
-  const API_BASE = import.meta.env.VITE_API_URL;
-  const IMAGE_BASE = API_BASE.replace("/api", ""); // سيحولها من .../api إلى الرابط الأساسي فقط
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,10 +12,7 @@ const Navbar = () => {
   const [showNotif, setShowNotif] = useState(false);
   const notifRef = useRef(null);
 
-  /**
-   * Fetch system activities for Admin users
-   * Memoized with useCallback to prevent unnecessary re-renders
-   */
+  // جلب الإشعارات للأدمن
   const fetchNotifications = useCallback(async () => {
     try {
       const res = await API.get("/auth/activities");
@@ -32,21 +22,15 @@ const Navbar = () => {
     }
   }, []);
 
-  /**
-   * Synchronize user state from LocalStorage
-   * Uses useCallback to ensure the function reference remains stable,
-   * satisfying React's hook dependency requirements.
-   */
+  // جلب وتحديث بيانات المستخدم من التخزين المحلي
   const fetchUserFromStorage = useCallback(() => {
     const userInfo = localStorage.getItem("userInfo");
     if (userInfo) {
       try {
         const parsedData = JSON.parse(userInfo);
-        // Handle both nested {user: ...} and flat user objects
         const userData = parsedData.user || parsedData;
         setUser(userData);
 
-        // Auto-fetch notifications if user is admin
         if (userData.role === "admin") {
           fetchNotifications();
         }
@@ -58,45 +42,28 @@ const Navbar = () => {
     }
   }, [fetchNotifications]);
 
-  /**
-   * Main Side-Effect: Syncs user data on mount, route change, and storage events
-   */
   useEffect(() => {
-    // Sync user data when navigating between pages
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchUserFromStorage();
 
-    /**
-     * Listener for custom 'storage' events
-     * This ensures the Navbar updates instantly when Profile.js updates localStorage
-     */
-    function handleStorageChange() {
-      fetchUserFromStorage();
-    }
-
+    // التحديث عند تغيير التخزين (من صفحات أخرى)
+    const handleStorageChange = () => fetchUserFromStorage();
     window.addEventListener("storage", handleStorageChange);
 
-    /**
-     * Closes notification dropdown when clicking anywhere else on the screen
-     */
+    // إغلاق قائمة الإشعارات عند الضغط خارجها
     const handleClickOutside = (event) => {
       if (notifRef.current && !notifRef.current.contains(event.target)) {
         setShowNotif(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Clean up event listeners to prevent memory leaks
     return () => {
       window.removeEventListener("storage", handleStorageChange);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [location.pathname, fetchUserFromStorage]);
 
-  /**
-   * Logout handler: Clears LocalStorage and redirects to Login
-   */
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userInfo");
@@ -108,14 +75,12 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="nav-container">
-        {/* Brand Logo */}
         <div className="logo">
           <Link to="/" onClick={() => setIsMenuOpen(false)}>
             Pro<span>Manager</span>
           </Link>
         </div>
 
-        {/* Mobile Hamburger Icon */}
         <div
           className={`menu-icon ${isMenuOpen ? "active" : ""}`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -125,7 +90,6 @@ const Navbar = () => {
           <span></span>
         </div>
 
-        {/* Links Section */}
         <div className={`nav-links ${isMenuOpen ? "open" : ""}`}>
           <Link
             to="/"
@@ -137,7 +101,6 @@ const Navbar = () => {
 
           {user ? (
             <div className="user-nav-section">
-              {/* Notifications Dropdown (Admin Only) */}
               {user.role === "admin" && (
                 <div className="notif-wrapper" ref={notifRef}>
                   <div
@@ -151,11 +114,10 @@ const Navbar = () => {
                       </span>
                     )}
                   </div>
-                  {/* Dropdown content logic remains here */}
+                  {/* هنا يمكن إضافة Dropdown الإشعارات إذا أردت */}
                 </div>
               )}
 
-              {/* Admin Dashboard Access */}
               {user.role === "admin" && (
                 <Link
                   to="/admin/dashboard"
@@ -173,7 +135,6 @@ const Navbar = () => {
                 مشاريعي
               </Link>
 
-              {/* Profile and Avatar Section */}
               <div className="nav-profile">
                 <Link
                   to="/profile"
@@ -182,10 +143,8 @@ const Navbar = () => {
                 >
                   <img
                     src={
-                      user?.avatar
-                        ? `${IMAGE_BASE}/uploads/${user.avatar
-                            .split(/[\\/]/)
-                            .pop()}?t=${new Date().getTime()}`
+                      user?.avatar?.startsWith("http")
+                        ? user.avatar
                         : `https://ui-avatars.com/api/?name=${
                             user?.name || "User"
                           }`
@@ -193,7 +152,7 @@ const Navbar = () => {
                     alt="avatar"
                     className="nav-avatar"
                     onError={(e) => {
-                      e.target.src = "/default-avatar.png";
+                      e.target.src = "https://via.placeholder.com/150";
                     }}
                   />
                   <span className="nav-username">
@@ -210,7 +169,6 @@ const Navbar = () => {
               </div>
             </div>
           ) : (
-            /* Login/Register Buttons for Guests */
             <div className="auth-btns">
               <Link to="/login" className="login-link">
                 دخول

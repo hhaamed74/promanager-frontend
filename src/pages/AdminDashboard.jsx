@@ -3,7 +3,6 @@ import API from "../api/axios";
 import { toast } from "react-toastify";
 import "../css/Dashboard.css";
 import useTitle from "../hooks/useTitle";
-// Importing Chart components from Recharts library
 import {
   BarChart,
   Bar,
@@ -17,12 +16,8 @@ import {
   Pie,
   Legend,
 } from "recharts";
-import * as XLSX from "xlsx"; // Library for Excel export functionality
+import * as XLSX from "xlsx";
 
-/**
- * AdminDashboard Component
- * Provides administrators with platform statistics, visual data charts, and user management tools.
- */
 const AdminDashboard = () => {
   useTitle("لوحة التحكم 📊");
 
@@ -31,9 +26,6 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
-  /**
-   * Fetch initial dashboard statistics and user list
-   */
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -54,18 +46,18 @@ const AdminDashboard = () => {
   }, []);
 
   /**
-   * Formats the user avatar path to a full URL
-   * @param {string} path - The relative path from the database
+   * تعديل: دالة معالجة الصورة الشخصية
+   * أصبحت ترجع الرابط كما هو لأنه رابط Cloudinary كامل
    */
-  const formatAvatar = (path) => {
-    if (!path) return "/default-avatar.png";
-    const fileName = path.split(/[\\/]/).pop();
-    return `http://localhost:5000/uploads/${fileName}`;
+  const formatAvatar = (avatarPath) => {
+    if (!avatarPath) return "/default-avatar.png";
+    // إذا كان الرابط يبدأ بـ http (رابط سحابي) نستخدمه مباشرة
+    if (avatarPath.startsWith("http")) return avatarPath;
+    // احتياطي لأي بيانات قديمة
+    return "/default-avatar.png";
   };
 
-  /**
-   * Chart Data Preparation
-   */
+  // بيانات الرسوم البيانية
   const barData = [
     { name: "المستخدمين", value: stats.users, color: "#3b82f6" },
     { name: "المشاريع", value: stats.projects, color: "#8b5cf6" },
@@ -81,9 +73,6 @@ const AdminDashboard = () => {
     },
   ];
 
-  /**
-   * Exports the user table to an Excel file
-   */
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(users);
     const wb = XLSX.utils.book_new();
@@ -91,16 +80,12 @@ const AdminDashboard = () => {
     XLSX.writeFile(wb, "قائمة_المستخدمين.xlsx");
   };
 
-  // Filter users based on search input (name or email)
   const filteredUsers = users.filter(
     (u) =>
       u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       u.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  /**
-   * Delete user account after confirmation
-   */
   const handleDelete = async (id) => {
     if (window.confirm("هل أنت متأكد من حذف هذا المستخدم نهائياً؟")) {
       try {
@@ -114,9 +99,6 @@ const AdminDashboard = () => {
     }
   };
 
-  /**
-   * Toggle user account status (Active / Inactive)
-   */
   const handleToggleStatus = async (id) => {
     try {
       const res = await API.put(`/auth/users/${id}/toggle`);
@@ -137,7 +119,6 @@ const AdminDashboard = () => {
   return (
     <div className="dashboard-page">
       <div className="dashboard-container">
-        {/* Header with Export Action */}
         <div className="dashboard-header">
           <h2>
             لوحة تحكم <span>المدير</span>
@@ -147,7 +128,6 @@ const AdminDashboard = () => {
           </button>
         </div>
 
-        {/* Statistics Cards Grid */}
         <div className="stats-grid">
           <div className="stat-card">
             <div className="stat-info">
@@ -172,11 +152,10 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Visual Charts Section */}
         <div className="charts-wrapper">
-          {/* Bar Chart: Platform Overview */}
           <div className="chart-box card-glass">
             <h3>إحصائيات المنصة</h3>
+
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={barData}>
                 <CartesianGrid
@@ -206,9 +185,9 @@ const AdminDashboard = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* Pie Chart: Completion Ratio */}
           <div className="chart-box card-glass">
             <h3>نسبة الإنجاز</h3>
+
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
@@ -229,7 +208,6 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* User Management Table Section */}
         <div className="table-header-actions">
           <h3>إدارة المستخدمين</h3>
           <div className="search-box">
@@ -255,69 +233,59 @@ const AdminDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.length > 0 ? (
-                filteredUsers.map((u) => (
-                  <tr key={u._id}>
-                    <td>
-                      <div className="user-cell">
-                        <img
-                          src={formatAvatar(u.avatar)}
-                          alt="avatar"
-                          onError={(e) =>
-                            (e.target.src = "/default-avatar.png")
-                          }
-                        />
-                        {u.name}
-                      </div>
-                    </td>
-                    <td>{u.email}</td>
-                    <td>
-                      <span className={`role-badge ${u.role}`}>
-                        {u.role === "admin" ? "مدير" : "عضو"}
-                      </span>
-                    </td>
-                    <td>
-                      <span
-                        className={`status-indicator ${
-                          u.isActive ? "active" : "inactive"
+              {filteredUsers.map((u) => (
+                <tr key={u._id}>
+                  <td>
+                    <div className="user-cell">
+                      <img
+                        src={formatAvatar(u.avatar)}
+                        alt="avatar"
+                        onError={(e) => (e.target.src = "/default-avatar.png")}
+                      />
+                      {u.name}
+                    </div>
+                  </td>
+                  <td>{u.email}</td>
+                  <td>
+                    <span className={`role-badge ${u.role}`}>
+                      {u.role === "admin" ? "مدير" : "عضو"}
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      className={`status-indicator ${
+                        u.isActive ? "active" : "inactive"
+                      }`}
+                    >
+                      {u.isActive ? "نشط" : "معطل"}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="action-btns">
+                      <button
+                        onClick={() => handleToggleStatus(u._id)}
+                        className={`action-btn toggle ${
+                          u.isActive ? "deactivate" : "activate"
                         }`}
+                        title={u.isActive ? "تعطيل" : "تفعيل"}
                       >
-                        {u.isActive ? "نشط" : "معطل"}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="action-btns">
-                        <button
-                          onClick={() => handleToggleStatus(u._id)}
-                          className={`action-btn toggle ${
-                            u.isActive ? "deactivate" : "activate"
+                        <i
+                          className={`fas fa-user-${
+                            u.isActive ? "slash" : "check"
                           }`}
-                          title={u.isActive ? "تعطيل" : "تفعيل"}
-                        >
-                          <i
-                            className={`fas fa-user-${
-                              u.isActive ? "slash" : "check"
-                            }`}
-                          ></i>
-                        </button>
-                        <button
-                          onClick={() => handleDelete(u._id)}
-                          className="action-btn delete"
-                          title="حذف"
-                        >
-                          <i className="fas fa-trash"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5" className="no-results">
-                    لا توجد نتائج بحث.. 🔍
+                        ></i>
+                      </button>
+                      <button
+                        onClick={() => handleDelete(u._id)}
+                        className="action-btn delete"
+                        title="حذف"
+                      >
+                        <i className="fas fa-trash"></i>
+                      </button>
+                    </div>
                   </td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </table>
         </div>

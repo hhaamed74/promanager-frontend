@@ -7,40 +7,49 @@ import useTitle from "../hooks/useTitle";
 
 /**
  * Login Component
- * Handles user authentication, token storage, and session initialization.
+ * معالجة تسجيل دخول المستخدم وإدارة الجلسة (Tokens)
  */
 const Login = () => {
   useTitle("تسجيل الدخول 🔑");
 
-  // Local state for credentials
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false); // لحماية الزر من الضغط المتكرر
   const navigate = useNavigate();
 
   /**
-   * handleSubmit: Manages the login request and stores authentication data
-   * @param {Event} e - Form submission event
+   * إرسال البيانات للباك إند
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     try {
-      // POST request to the authentication endpoint
+      // إرسال طلب تسجيل الدخول
       const { data } = await API.post("/auth/login", formData);
 
       /**
-       * Auth Success Logic:
-       * 1. Store the JWT token for Axios interceptors
-       * 2. Store user info (profile, role, name) for UI consumption
+       * تخزين البيانات في التخزين المحلي (LocalStorage)
+       * ملاحظة: تأكد أن الباك إند يعيد 'token' و 'user'
        */
       localStorage.setItem("token", data.token);
-      localStorage.setItem("userInfo", JSON.stringify(data.user || data));
+
+      // تخزين بيانات المستخدم مع التأكد من صيغة البيانات
+      const userData = data.user || data;
+      localStorage.setItem("userInfo", JSON.stringify(userData));
 
       toast.success("أهلاً بك يا برنس! 👋");
 
-      // Redirect to the home page after successful login
+      // التوجه للرئيسية
       navigate("/");
+
+      // إطلاق حدث 'storage' يدوياً لتنبيه الـ Navbar بتحديث البيانات فوراً
+      window.dispatchEvent(new Event("storage"));
     } catch (err) {
-      // Error handling with dynamic messaging from server
-      toast.error(err.response?.data?.message || "خطأ في البيانات");
+      toast.error(
+        err.response?.data?.message || "البريد أو كلمة المرور غير صحيحة"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -53,12 +62,12 @@ const Login = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
-          {/* Email Input Field */}
           <div className="input-group">
             <input
               type="email"
               placeholder="البريد الإلكتروني"
               autoComplete="email"
+              value={formData.email}
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
@@ -66,12 +75,12 @@ const Login = () => {
             />
           </div>
 
-          {/* Password Input Field */}
           <div className="input-group">
             <input
               type="password"
               placeholder="كلمة المرور"
               autoComplete="current-password"
+              value={formData.password}
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
               }
@@ -79,8 +88,8 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" className="auth-btn">
-            دخول
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? "جاري الدخول..." : "دخول"}
           </button>
         </form>
 

@@ -7,8 +7,6 @@ import useTitle from "../hooks/useTitle";
 
 /**
  * MyProjects Component
- * Fetches and displays projects belonging only to the currently logged-in user.
- * Provides options to edit or delete specific projects.
  */
 const MyProjects = () => {
   useTitle("مشاريعي الخاصة 👤");
@@ -16,9 +14,6 @@ const MyProjects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  /**
-   * Fetch user-specific projects on mount
-   */
   useEffect(() => {
     const fetchMyProjects = async () => {
       try {
@@ -36,15 +31,10 @@ const MyProjects = () => {
     fetchMyProjects();
   }, []);
 
-  /**
-   * Handles project deletion with confirmation
-   * @param {string} id - The project ID to delete
-   */
   const handleDelete = async (id) => {
     if (window.confirm("هل تريد حذف مشروعك نهائياً؟")) {
       try {
         await API.delete(`/projects/${id}`);
-        // Update UI by filtering out the deleted project
         setProjects(projects.filter((p) => p._id !== id));
         toast.success("تم الحذف بنجاح");
         // eslint-disable-next-line no-unused-vars
@@ -55,12 +45,17 @@ const MyProjects = () => {
   };
 
   /**
-   * Helper to format image URLs safely
+   * دالة معالجة الروابط المحدثة
+   * تتعامل مع روابط Cloudinary مباشرة
    */
   const getImageUrl = (imagePath) => {
     if (!imagePath) return "https://placehold.co/400x300?text=No+Image";
-    const fileName = imagePath.split(/[\\/]/).pop();
-    return `http://localhost:5000/uploads/${fileName}`;
+
+    // إذا كان الرابط يبدأ بـ http (سحابي) نستخدمه كما هو
+    if (imagePath.startsWith("http")) return imagePath;
+
+    // احتياطي للتعامل مع أي مسارات قديمة مخزنة محلياً (إن وجدت)
+    return "https://placehold.co/400x300?text=Old+Path+Error";
   };
 
   if (loading) return <div className="loader">جاري تحميل مشاريعك...</div>;
@@ -82,6 +77,7 @@ const MyProjects = () => {
                 <img
                   src={getImageUrl(project.image)}
                   alt={project.title}
+                  loading="lazy" // تحسين الأداء
                   onError={(e) => {
                     e.target.src =
                       "https://placehold.co/400x300?text=Image+Error";
